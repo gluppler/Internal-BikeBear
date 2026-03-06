@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bear to the Rescue</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Be+Vietnam+Pro:wght@400;600;700&family=Boldonse&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+
+        /* ==============================================
+           RESET & VARIABLES
+        ============================================== */
+        :root {
+            --yellow:      #F6D300;
+            --yellow-alt:  #FDC706;
+            --black:       #000000;
+            --white:       #FFFFFF;
+            --slide-speed: 25s;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* Line-break utility: .line spans replace all hard line breaks */
+        .line { display: block; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--yellow); overflow-x: hidden; width: 100%; }
+
+
+        /* ==============================================
+           HERO SCROLL ZONE
+           A tall container that creates the scroll space
+           for the parallax intro. The hero sticks to the
+           top of the viewport while the user scrolls
+           through this zone. Once they exit the zone the
+           hero scrolls away and the rest of the page
+           continues normally.
+        ============================================== */
+        .hero-scroll-zone {
+            position: relative;
+            height: 200vh;   /* 100vh = hero visible + 100vh of scroll room */
+        }
+
+
+        /* ==============================================
+           HERO SECTION
+           Sticky so it stays on-screen during the intro
+           scroll.
+           overflow:hidden clips everything to the frame.
+        ============================================== */
+        .hero {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 50vw;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+
+        /* --- Background: always visible, never animated --- */
+        .hero__bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            z-index: 0;
+        }
+
+
+        /* ==============================================
+           ALL PARALLAX ELEMENTS
+           Default state = invisible / offset.
+           JS adds .is-revealed to drive the CSS vars.
+           Each element has its own transition-delay for
+           a staggered "assembly" effect.
+        ============================================== */
+
+        /* Shared parallax element base */
+        .hero__jupiter,
+        .hero__cloud-left,
+        .hero__cloud-bottom-left,
+        .hero__cloud-right,
+        .hero__cloud-right-mid,
+        .hero__bear,
+        .hero__logo,
+        .hero__title,
+        .hero__subtext,
+        .hero__cta,
+        .hero__slider {
+            will-change: transform, opacity;
+        }
+
+
+        /* --- Jupiter planet ---
+             left ~13% | top ~4.4% of 50vw height = ~8.8% of width */
+        .hero__jupiter {
+            position: absolute;
+            top: 4.44%;       /* of hero height (50vw) → ~32px at 1440 */
+            left: 12.92%;     /* of hero width               */
+            width: 10.56%;    /* of hero width               */
+            z-index: 2;
+
+            opacity: 0;
+            transform: translateY(-8%) scale(0.85);
+            transition: opacity 0.7s ease 0.15s,
+                        transform 0.7s ease 0.15s;
+        }
+
+        /* --- Left tall cloud --- */
+        .hero__cloud-left {
+            position: absolute;
+            top: 8.33%;
+            left: 0;
+            width: 24.31%;
+            z-index: 3;
+
+            opacity: 0;
+            transform: translateX(-12%);
+            transition: opacity 0.8s ease 0.05s,
+                        transform 0.8s ease 0.05s;
+        }
+
+        /* --- Bottom-left cloud cluster --- */
+        .hero__cloud-bottom-left {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 29.17%;
+            z-index: 3;
+
+            opacity: 0;
+            transform: translateX(-12%);
+            transition: opacity 0.8s ease 0.1s,
+                        transform 0.8s ease 0.1s;
+        }
+
+        /* --- Right-side tall cloud: anchored top-right, fills ~60% of hero height --- */
+        .hero__cloud-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 29%;
+            z-index: 3;
+
+            opacity: 0;
+            transform: translateX(12%);
+            transition: opacity 0.8s ease 0.05s,
+                        transform 0.8s ease 0.05s;
+        }
+
+        /* --- Right-bottom cloud: anchored bottom-right, fills lower half --- */
+        .hero__cloud-right-mid {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 32%;
+            z-index: 3;
+
+            opacity: 0;
+            transform: translateX(12%);
+            transition: opacity 0.8s ease 0.1s,
+                        transform 0.8s ease 0.1s;
+        }
+
+        /* --- Main flying bear: z-index 25 = above slider (20) and title (10) --- */
+        .hero__bear {
+            position: absolute;
+            bottom: 0;
+            top:23%;
+            left: 50%;
+            transform: translateX(-50%) translateY(0);
+            width: 66.67%;
+            z-index: 25;
+
+            opacity: 0;
+            /* translateY: initial offset + final centering combined in JS */
+            transition: opacity 0.9s ease 0.3s,
+                        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+        }
+
+        /* --- Logo: flush to top-left corner, zero gap --- */
+        .hero__logo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3.61%;
+            height: auto;
+            z-index: 10;
+
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease 0.55s,
+                        transform 0.5s ease 0.55s;
+        }
+
+        /* --- Main headline --- */
+        .hero__title {
+            position: absolute;
+            top: 2.5%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Boldonse', sans-serif;
+            font-size: 5.9vw;
+            font-weight: 400;
+            line-height: 7.64vw;
+            letter-spacing: -0.21vw;
+            text-transform: uppercase;
+            color: var(--black);
+            z-index: 10;
+            pointer-events: none;
+
+            opacity: 0;
+            transform: translateY(-5%);
+            transition: opacity 0.7s ease 0.45s,
+                        transform 0.7s ease 0.45s;
+        }
+
+        /* --- Subtext bottom-left ---
+             top: 31.53vw of viewport width.
+             As % of hero height (50vw): 31.53/50 = 63.06% */
+        .hero__subtext {
+            position: absolute;
+            top: 63.06%;
+            left: 2.78%;
+            width: 18.75%;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.39vw;
+            font-weight: 700;
+            line-height: 120%;
+            letter-spacing: -0.056vw;
+            color: var(--black);
+            z-index: 10;
+
+            opacity: 0;
+            transform: translateX(-6%);
+            transition: opacity 0.6s ease 0.6s,
+                        transform 0.6s ease 0.6s;
+        }
+
+        .subtext__gap { margin-top: 0.83vw; }
+
+        /* --- CTA pill bottom-right ---
+             bottom: 9.72vw of viewport width.
+             As % of hero height (50vw): 9.72/50 = 19.44% */
+        .hero__cta {
+            position: absolute;
+            bottom: 19.44%;
+            right: 2.78%;
+            background: var(--black);
+            color: var(--white);
+            padding: 0.83vw 1.53vw;
+            border-radius: 1vw;
+            text-decoration: none;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-size: 0.83vw;
+            font-weight: 600;
+            letter-spacing: 0.08vw;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.69vw;
+            white-space: nowrap;
+            z-index: 10;
+            transition: opacity 0.6s ease 0.65s,
+                        transform 0.6s ease 0.65s;
+
+            opacity: 0;
+            transform: translateX(6%);
+        }
+        .hero__cta:hover  { transform: scale(1.05) !important; }
+        .hero__cta:active { transform: scale(0.97) !important; }
+        .hero__cta img { width: 1.32vw; height: 1.32vw; }
+
+        /* After parallax fires, switch to fast snappy hover transition — no delay */
+        .hero.is-revealed .hero__cta {
+            transition: transform 0.2s ease;
+        }
+        .hero.is-revealed .hero__cta:hover  { transform: scale(1.05); }
+        .hero.is-revealed .hero__cta:active { transform: scale(0.97); }
+
+        /* --- Slider strip pinned to hero bottom --- */
+        .hero__slider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 16.66%;   /* 8.33vw / 50vw = 16.66% of hero height */
+            overflow: hidden;
+            z-index: 20;
+            pointer-events: none;
+
+            opacity: 0;
+            transform: translateY(30%);
+            transition: opacity 0.6s ease 0.75s,
+                        transform 0.6s ease 0.75s;
+        }
+
+
+        /* ==============================================
+           REVEALED STATE
+           JS adds .is-revealed to .hero when the scroll
+           progress threshold is crossed. Each child's
+           transition-delay creates the staggered assembly.
+        ============================================== */
+        .hero.is-revealed .hero__jupiter,
+        .hero.is-revealed .hero__cloud-left,
+        .hero.is-revealed .hero__cloud-bottom-left,
+        .hero.is-revealed .hero__cloud-right,
+        .hero.is-revealed .hero__cloud-right-mid,
+        .hero.is-revealed .hero__logo,
+        .hero.is-revealed .hero__title,
+        .hero.is-revealed .hero__subtext,
+        .hero.is-revealed .hero__cta,
+        .hero.is-revealed .hero__slider {
+            opacity: 1;
+            transform: translateX(0) translateY(0) scale(1);
+        }
+
+        /* Bear needs special treatment: keep translateX(-50%) centering */
+        .hero.is-revealed .hero__bear {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+
+        /* ==============================================
+           SLIDER TRACK & CARDS
+        ============================================== */
+        .slider-track {
+            display: flex;
+            width: fit-content;
+            animation: marquee var(--slide-speed) linear infinite;
+        }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        .slider-card {
+            width: 19.44vw;
+            height: 5.56vw;
+            background: var(--white);
+            border-radius: 1.46vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 1.04vw;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.39vw;
+            font-weight: 700;
+            line-height: 120%;
+            letter-spacing: -0.056vw;
+            white-space: nowrap;
+            padding: 0 1.74vw;
+        }
+
+
+        /* ==============================================
+           PACKAGE / HOW IT WORKS
+        ============================================== */
+        .package {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 56.39vw;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4.17vw 2.78vw;
+        }
+
+        .package__title {
+            color: var(--white);
+            font-family: 'Boldonse', sans-serif;
+            font-size: 2.08vw;
+            font-weight: 400;
+            line-height: 2.78vw;
+            letter-spacing: -0.035vw;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 4.17vw;
+        }
+
+        .steps {
+            display: flex;
+            gap: 1.39vw;
+            margin-bottom: 5.56vw;
+        }
+
+        .step {
+            width: 28.68vw;
+            height: 8.68vw;
+            background: var(--white);
+            border-radius: 1.39vw;
+            display: flex;
+            align-items: center;
+            padding: 0.69vw;
+        }
+
+        .step__num {
+            background: linear-gradient(0deg, #FDC706 0%, #FDC706 100%);
+            width: 6.94vw;
+            height: 6.94vw;
+            border-radius: 0.69vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Boldonse', sans-serif;
+            font-size: 2.08vw;
+            font-weight: 400;
+            line-height: 2.78vw;
+            letter-spacing: -0.035vw;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            margin-right: 1.39vw;
+        }
+
+        .step__label {
+            font-family: 'Boldonse', sans-serif;
+            font-size: 2.08vw;
+            font-weight: 400;
+            line-height: 2.78vw;
+            letter-spacing: -0.035vw;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+
+        /* Pricing card */
+        .pricing {
+            position: relative;
+            width: 58.06vw;
+            height: 20.76vw;
+            background: #FFD900;
+            border-radius: 1.74vw;
+            display: flex;
+            align-items: stretch;
+            padding: 2.78vw;
+            gap: 3.47vw;
+            overflow: visible;
+        }
+
+        .pricing__num {
+            font-family: 'Boldonse', sans-serif;
+            font-size: 6.94vw;
+            font-weight: 400;
+            line-height: 1;
+            color: var(--black);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pricing__label {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.11vw;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.022vw;
+            color: var(--black);
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .pricing__left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            padding-bottom: 0.28vw;
+        }
+
+        .pricing__mid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 0;
+        }
+
+        .pricing__mid h3 {
+            font-family: 'Boldonse', sans-serif;
+            font-size: 2.08vw;
+            font-weight: 400;
+            line-height: 2.78vw;
+            letter-spacing: -0.035vw;
+            text-transform: uppercase;
+            text-align: center;
+            color: var(--black);
+            margin-bottom: 0.56vw;
+        }
+
+        .pricing__mid .expires {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.39vw;
+            font-weight: 400;
+            line-height: 120%;
+            letter-spacing: -0.022vw;
+            color: var(--black);
+            margin-bottom: 0.83vw;
+        }
+
+        .pricing__list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .pricing__list li {
+            display: flex;
+            align-items: center;
+            gap: 0.56vw;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.25vw;
+            font-weight: 400;
+            line-height: 160%;
+            letter-spacing: -0.022vw;
+            color: var(--black);
+        }
+        .pricing__list li::before {
+            content: '';
+            display: inline-block;
+            width: 1.25vw;
+            height: 1.25vw;
+            background: url('bulletin.svg') no-repeat center / contain;
+            flex-shrink: 0;
+        }
+
+        /* Peeking bear in pricing card — percentage-based as instructed */
+        .pricing__bear {
+            position: absolute;
+            left: 38%;
+            top: 20%;
+            width: 75%;
+            z-index: 2;
+        }
+
+        .pricing__btn {
+            align-self: flex-end;
+            background: var(--black);
+            color: var(--white);
+            padding: 1.04vw 2.08vw;
+            border-radius: 0.69vw;
+            font-family: 'Boldonse', sans-serif;
+            font-size: 1.3vw;
+            font-weight: 400;
+            line-height: 2.29vw;
+            letter-spacing: -0.008vw;
+            text-transform: uppercase;
+            text-decoration: none;
+            white-space: nowrap;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            z-index: 3;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+        .pricing__btn:hover  { transform: scale(1.05); }
+        .pricing__btn:active { transform: scale(0.97); }
+
+
+        /* ==============================================
+           FORM SECTION
+        ============================================== */
+        .form-section {
+            width: 100%;
+            background: var(--yellow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 6.94vw;
+            padding-bottom: 0;
+        }
+
+        .form-section h2 {
+            font-family: 'Boldonse', sans-serif;
+            font-size: 2.78vw;
+            font-weight: 400;
+            line-height: 5.9vw;
+            letter-spacing: -0.022vw;
+            text-transform: uppercase;
+            text-align: center;
+            color: var(--black);
+        }
+
+        .form-section .sub {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.25vw;
+            font-weight: 400;
+            line-height: 120%;
+            letter-spacing: -0.022vw;
+            text-align: center;
+            color: var(--black);
+            margin-top: 0.56vw;
+        }
+
+        .form-box {
+            width: 86.25vw;
+            background: var(--black);
+            border-radius: 1.74vw;
+            padding: 4.17vw;
+            margin-top: 3.47vw;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.39vw;
+            margin-bottom: 1.39vw;
+        }
+        .span-2 { grid-column: span 2; }
+
+        .f-input {
+            width: 100%;
+            height: 4.17vw;
+            border-radius: 1vw;
+            border: none;
+            padding: 0 2.08vw;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.11vw;
+            background: var(--white);
+            color: var(--black);
+            outline: none;
+        }
+        .f-input::placeholder { color: #888; }
+
+        .f-card {
+            background: var(--white);
+            border-radius: 1.39vw;
+            padding: 1.39vw 2.08vw;
+            margin-bottom: 1.39vw;
+        }
+
+        .f-card-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.11vw;
+            color: var(--black);
+            display: block;
+            margin-bottom: 1.04vw;
+        }
+
+        .f-radio-row {
+            display: flex;
+            gap: 2.08vw;
+            flex-wrap: wrap;
+        }
+
+        .f-radio {
+            display: flex;
+            align-items: center;
+            gap: 0.42vw;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.97vw;
+            color: var(--black);
+            cursor: pointer;
+        }
+        .f-radio input { width: 1.11vw; height: 1.11vw; accent-color: var(--black); cursor: pointer; }
+
+        .f-textarea-card {
+            background: var(--white);
+            border-radius: 1.39vw;
+            padding: 1.39vw 2.08vw;
+            height: 24.31vw;
+        }
+        .f-hint {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.97vw;
+            color: #555;
+            margin-bottom: 1.04vw;
+            display: block;
+        }
+        .f-textarea {
+            width: 100%;
+            height: 16vw;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.11vw;
+            color: var(--black);
+            background: transparent;
+        }
+
+        .form-footer {
+            width: 86.25vw;
+            margin-top: 1.74vw;
+        }
+        .consent {
+            display: flex;
+            align-items: center;
+            gap: 0.69vw;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.97vw;
+            color: var(--black);
+            margin-bottom: 1.39vw;
+            cursor: pointer;
+        }
+        .consent input { width: 1.11vw; height: 1.11vw; accent-color: var(--yellow); flex-shrink: 0; cursor: pointer; }
+
+        .btn-row { display: flex; gap: 1.04vw; }
+
+        .btn-submit {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 0.83vw 1.74vw;
+            border-radius: 1vw;
+            cursor: pointer;
+            font-family: 'Boldonse', sans-serif;
+            font-size: 0.83vw;
+            font-weight: 400;
+            letter-spacing: -0.008vw;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.69vw;
+            transition: transform 0.2s;
+        }
+        .btn-submit:hover  { transform: scale(1.05); }
+        .btn-submit:active { transform: scale(0.97); }
+        .btn-submit img { width: 1.32vw; height: 1.32vw; }
+
+
+        /* ==============================================
+           FOOTER
+        ============================================== */
+        .footer {
+            width: 100%;
+            background: var(--yellow);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-top: 6.94vw;
+            overflow: hidden;
+        }
+        .footer__bear { width: 50vw; display: block; }
+
+        /* ==============================================
+           TABLET  —  769px to 1024px
+           iPad, iPad Pro, landscape tablets
+        ============================================== */
+        @media (max-width: 1024px) {
+
+            /* ── HERO ── */
+            .hero-scroll-zone { height: 185vh; }
+            .hero              { height: 68vw; }
+
+            .hero__title       { font-size: 9.5vw; line-height: 10vw; letter-spacing: -0.28vw; top: 3%; }
+            .hero__logo        { width: 5%; top: 0; left: 0; }
+            .hero__bear        { width: 70%; }
+            .hero__jupiter     { width: 12%; left: 13%; top: 5%; }
+            .hero__cloud-left  { width: 27%; }
+            .hero__cloud-bottom-left { width: 33%; }
+            .hero__cloud-right { width: 32%; }
+            .hero__cloud-right-mid   { width: 36%; }
+
+            .hero__subtext {
+                top: 65%;
+                left: 3%;
+                width: 26%;
+                font-size: 1.5vw;
+                line-height: 120%;
+            }
+
+            .hero__cta {
+                bottom: 18%;
+                right: 3%;
+                padding: 1.2vw 2vw;
+                font-size: 1.1vw;
+                border-radius: 1.8vw;
+                gap: 0.9vw;
+            }
+            .hero__cta img { width: 1.8vw; height: 1.8vw; }
+
+            .hero__slider  { height: 15%; }
+            .slider-card   { width: 28vw; height: 8.5vw; font-size: 2.1vw; border-radius: 2.1vw; margin: 0 1.2vw; }
+
+            /* ── PACKAGE ── */
+            .package { height: auto; padding: 7vw 4vw 9vw; }
+            .package__title { font-size: 3.2vw; line-height: 4.2vw; letter-spacing: -0.1vw; margin-bottom: 5vw; }
+
+            .steps  { gap: 2vw; margin-bottom: 6vw; }
+            .step   { width: 29vw; height: 9.5vw; padding: 1vw; border-radius: 1.6vw; }
+            .step__num   { width: 7.5vw; height: 7.5vw; font-size: 3.2vw; line-height: 3.2vw; margin-right: 1.4vw; border-radius: 1vw; }
+            .step__label { font-size: 2.6vw; line-height: 3.2vw; letter-spacing: -0.08vw; }
+
+            .pricing          { width: 82vw; height: auto; padding: 3vw; gap: 2.5vw; border-radius: 2vw; }
+            .pricing__num     { font-size: 10vw; }
+            .pricing__label   { font-size: 1.4vw; }
+            .pricing__mid h3  { font-size: 3.2vw; line-height: 4vw; }
+            .pricing__mid .expires { font-size: 1.8vw; }
+            .pricing__list li { font-size: 1.7vw; }
+            .pricing__list li::before { width: 1.7vw; height: 1.7vw; }
+            .pricing__btn     { font-size: 1.8vw; padding: 1.3vw 2.6vw; }
+
+            /* ── FORM ── */
+            .form-section     { padding-top: 9vw; }
+            .form-section h2  { font-size: 5.5vw; line-height: 7vw; }
+            .form-section .sub { font-size: 1.7vw; }
+            .form-box         { width: 90vw; padding: 3.5vw; border-radius: 2.5vw; margin-top: 3vw; }
+            .form-grid        { gap: 1.8vw; margin-bottom: 1.8vw; }
+            .f-input          { height: 6vw; font-size: 1.6vw; border-radius: 1.4vw; padding: 0 2.2vw; }
+            .f-card           { border-radius: 2vw; padding: 2vw 2.5vw; margin-bottom: 1.8vw; }
+            .f-card-title     { font-size: 1.6vw; margin-bottom: 1.4vw; }
+            .f-radio-row      { gap: 2vw; }
+            .f-radio          { font-size: 1.5vw; gap: 0.7vw; }
+            .f-radio input    { width: 1.6vw; height: 1.6vw; }
+            .f-textarea-card  { border-radius: 2vw; padding: 2vw 2.5vw; height: auto; }
+            .f-hint           { font-size: 1.4vw; margin-bottom: 1.4vw; }
+            .f-textarea       { height: 24vw; font-size: 1.6vw; }
+            .form-footer      { width: 90vw; margin-top: 2vw; }
+            .consent          { font-size: 1.4vw; gap: 1vw; margin-bottom: 2vw; }
+            .consent input    { width: 1.6vw; height: 1.6vw; }
+            .btn-row          { gap: 1.4vw; }
+            .btn-submit       { padding: 1.2vw 2.2vw; font-size: 1.2vw; border-radius: 1.4vw; gap: 1vw; }
+            .btn-submit img   { width: 1.8vw; height: 1.8vw; }
+
+            /* ── FOOTER ── */
+            .footer           { padding-top: 8vw; }
+            .footer__bear     { width: 65vw; }
+        }
+
+
+        /* ==============================================
+           MOBILE  —  max-width 768px
+           Phones in portrait and landscape
+        ============================================== */
+        @media (max-width: 768px) {
+
+            /* ── HERO ── */
+            .hero-scroll-zone { height: 260vw; }
+            .hero              { height: 170vw; }
+
+            .hero__title {
+                top: 3%;
+                font-size: 13vw;
+                line-height: 13.5vw;
+                letter-spacing: -0.4vw;
+            }
+
+            .hero__logo        { width: 10%; top: 0; left: 0; }
+            .hero__bear        { width: 105%; }
+            .hero__jupiter     { width: 18%; left: 16%; top: 4%; }
+
+            .hero__cloud-left        { width: 44%; top: 6%; }
+            .hero__cloud-bottom-left { width: 55%; }
+            .hero__cloud-right       { width: 46%; }
+            .hero__cloud-right-mid   { width: 58%; }
+
+            .hero__subtext {
+                top: auto;
+                bottom: 22%;
+                left: 4%;
+                width: 46%;
+                font-size: 3.6vw;
+                line-height: 120%;
+                letter-spacing: -0.1vw;
+            }
+
+            .hero__cta {
+                bottom: 22%;
+                right: 4%;
+                padding: 3vw 4.5vw;
+                font-size: 3vw;
+                border-radius: 3.5vw;
+                gap: 2vw;
+            }
+            .hero__cta img     { width: 4vw; height: 4vw; }
+
+            .hero__slider      { height: 12%; }
+            .slider-card       { width: 48vw; height: 12vw; font-size: 3.8vw; border-radius: 3.5vw; margin: 0 2vw; padding: 0 3vw; }
+
+            /* ── PACKAGE ── */
+            .package { height: auto; padding: 14vw 5vw 12vw; justify-content: flex-start; }
+            .package__title { font-size: 7.5vw; line-height: 9vw; letter-spacing: -0.2vw; margin-bottom: 9vw; }
+
+            /* Steps stack vertically */
+            .steps {
+                flex-direction: column;
+                gap: 3.5vw;
+                margin-bottom: 10vw;
+                width: 100%;
+            }
+            .step        { width: 100%; height: 22vw; padding: 2.5vw; border-radius: 3.5vw; }
+            .step__num   { width: 16vw; height: 16vw; font-size: 7vw; line-height: 7vw; margin-right: 4vw; border-radius: 2.5vw; }
+            .step__label { font-size: 6.5vw; line-height: 7.5vw; letter-spacing: -0.2vw; }
+
+            /* Pricing: two-column row on top, then mid section below */
+            .pricing {
+                width: 100%;
+                height: auto;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 6vw;
+                gap: 5vw;
+                border-radius: 6vw;
+            }
+
+            /* Left row becomes a flex row: big 04 + label side by side */
+            .pricing__left {
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: flex-end;
+                gap: 3vw;
+                padding-bottom: 0;
+            }
+
+            .pricing__num     { font-size: 24vw; line-height: 1; flex: none; display: block; }
+            .pricing__label   { font-size: 4vw; letter-spacing: -0.1vw; text-align: left; margin-bottom: 2vw; }
+            .pricing__mid     { padding-top: 0; }
+            .pricing__mid h3  { font-size: 7vw; line-height: 8.5vw; text-align: left; }
+            .pricing__mid .expires { font-size: 4vw; margin-bottom: 3.5vw; }
+            .pricing__list li { font-size: 4vw; gap: 2vw; }
+            .pricing__list li::before { width: 4vw; height: 4vw; }
+
+            /* Bear: pull out of absolute flow on mobile */
+            .pricing__bear {
+                position: absolute;
+                left: 16%;
+                top: 67%;
+                width: 100%;
+                display: block;
+                margin: 0 auto;
+            }
+
+            .pricing__btn {
+                align-self: flex-start;
+                font-size: 5vw;
+                padding: 3.5vw 7vw;
+                border-radius: 3vw;
+                line-height: 1.3;
+            }
+
+            /* ── FORM ── */
+            .form-section     { padding-top: 16vw; }
+            .form-section h2  { font-size: 11vw; line-height: 13vw; letter-spacing: -0.3vw; }
+            .form-section .sub { font-size: 4vw; margin-top: 2.5vw; letter-spacing: -0.1vw; }
+
+            .form-box { width: 92vw; padding: 6vw; border-radius: 5vw; margin-top: 7vw; }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 3.5vw;
+                margin-bottom: 3.5vw;
+            }
+            .span-2           { grid-column: span 1; }
+
+            .f-input          { height: 14vw; font-size: 4vw; border-radius: 3.5vw; padding: 0 5vw; }
+            .f-input::placeholder { font-size: 4vw; }
+
+            .f-card           { border-radius: 4.5vw; padding: 5vw; margin-bottom: 3.5vw; }
+            .f-card-title     { font-size: 4.2vw; margin-bottom: 3.5vw; }
+
+            .f-radio-row      { flex-direction: column; gap: 3.5vw; }
+            .f-radio          { font-size: 4vw; gap: 2.5vw; }
+            .f-radio input    { width: 5vw; height: 5vw; }
+
+            .f-textarea-card  { border-radius: 4.5vw; padding: 5vw; height: auto; }
+            .f-hint           { font-size: 3.5vw; margin-bottom: 3.5vw; }
+            .f-textarea       { height: 45vw; font-size: 4vw; }
+
+            .form-footer      { width: 92vw; margin-top: 5vw; }
+            .consent          { font-size: 3.5vw; gap: 3vw; margin-bottom: 5vw; align-items: flex-start; }
+            .consent input    { width: 5vw; height: 5vw; margin-top: 0.8vw; }
+
+            .btn-row          { gap: 3.5vw; flex-wrap: wrap; }
+            .btn-submit       { padding: 3.5vw 6vw; font-size: 3.8vw; border-radius: 3.5vw; gap: 2.5vw; }
+            .btn-submit img   { width: 5vw; height: 5vw; }
+
+            /* ── FOOTER ── */
+            .footer           { padding-top: 12vw; }
+            .footer__bear     { width: 90vw; }
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- ================================================
+         HERO SCROLL ZONE
+         200vh tall. The sticky .hero sits at top:0 and
+         stays on screen while the user scrolls through
+         the extra 100vh of scroll room. JS reads scroll
+         progress across this zone and assembles the hero.
+    ================================================ -->
+    <div class="hero-scroll-zone">
+
+        <header class="hero">
+
+            <!-- LAYER 0: Background — always visible on load -->
+            <img class="hero__bg" src="img-background.png" alt="">
+
+            <!-- LAYER 2: Jupiter -->
+            <img class="hero__jupiter" src="img-jupiter.png" alt="">
+
+            <!-- LAYER 3: Clouds -->
+            <img class="hero__cloud-left"        src="img-left-middle-cloud.png"  alt="">
+            <img class="hero__cloud-bottom-left" src="img-bottom-left-cloud.png"  alt="">
+            <img class="hero__cloud-right"       src="img-right-side-cloud.png"   alt="">
+            <img class="hero__cloud-right-mid"   src="img-right-middle-cloud.png" alt="">
+
+            <!-- LAYER 4: Main bear -->
+            <img class="hero__bear" src="img-hero-banner-center.png" alt="Bear to the Rescue">
+
+            <!-- LAYER 10: UI — logo, title, subtext, CTA -->
+            <img class="hero__logo" src="logo.gif" alt="Bear to the Rescue logo">
+            <h1 class="hero__title"><span class="line">Bear To</span><span class="line">The Rescue</span></h1>
+            <p class="hero__subtext">
+                <span class="line">Your site was built to represent your brand with strength and clarity.</span><span class="line subtext__gap">We'll make sure it continues to do exactly that.</span>
+            </p>
+            <a href="#form" class="hero__cta">
+                STRAIGHT TO FORM
+                <img src="hero-button-icon.svg" alt="">
+            </a>
+
+            <!-- LAYER 20: Slider strip -->
+            <div class="hero__slider">
+                <div class="slider-track">
+                    <div class="slider-card">Need a Website?</div>
+                    <div class="slider-card">Font missing?</div>
+                    <div class="slider-card">Logo missing?</div>
+                    <div class="slider-card">Need a redesign?</div>
+                    <div class="slider-card">Website crashed?</div>
+                    <div class="slider-card">Need a Website?</div>
+                    <div class="slider-card">Font missing?</div>
+                    <div class="slider-card">Logo missing?</div>
+                    <div class="slider-card">Need a redesign?</div>
+                    <div class="slider-card">Website crashed?</div>
+                    <div class="slider-card">Content update?</div>
+                </div>
+            </div>
+
+        </header>
+
+    </div><!-- /.hero-scroll-zone -->
+
+
+    <!-- ================================================
+         SECTION 2 — PACKAGE / HOW IT WORKS
+    ================================================ -->
+    <section class="package">
+
+        <h2 class="package__title"><span class="line">Here's how the</span><span class="line">rescue works</span></h2>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step__num">01</div>
+                <span class="step__label"><span class="line">Buy</span><span class="line">Points</span></span>
+            </div>
+            <div class="step">
+                <div class="step__num">02</div>
+                <span class="step__label"><span class="line">Submit</span><span class="line">Request</span></span>
+            </div>
+            <div class="step">
+                <div class="step__num">03</div>
+                <span class="step__label"><span class="line">Done &amp;</span><span class="line">Sorted</span></span>
+            </div>
+        </div>
+
+        <div class="pricing">
+            <div class="pricing__left">
+                <div class="pricing__num">04</div>
+                <div class="pricing__label">Credits / RM800</div>
+            </div>
+            <div class="pricing__mid">
+                <h3>Pricing</h3>
+                <p class="expires">Expires in 1 year</p>
+                <ul class="pricing__list">
+                    <li>One-time purchase</li>
+                    <li>Used for all purposes</li>
+                    <li>Bulk buy</li>
+                    <li>Expires in 1 year</li>
+                </ul>
+            </div>
+            <img class="pricing__bear" src="img-peeking-bear.png" alt="">
+            <a href="#form" class="pricing__btn">BUY NOW</a>
+        </div>
+
+    </section>
+
+
+    <!-- ================================================
+         SECTION 3 — FORM
+    ================================================ -->
+    <section id="form" class="form-section">
+
+        <h2>Make Your Move</h2>
+        <p class="sub">
+            <span class="line">You've got points. You've got purpose.</span><span class="line">Now tell us what needs fixing, and we'll get straight to work.</span>
+        </p>
+
+        <div class="form-box">
+            <form id="rescue-form">
+                <div class="form-grid">
+                    <input class="f-input span-2" type="text"  placeholder="Name">
+                    <input class="f-input"        type="text"  placeholder="Website">
+                    <input class="f-input"        type="text"  placeholder="Person in charge (Optional)">
+                    <input class="f-input"        type="text"  placeholder="Phone (Optional)">
+                    <input class="f-input"        type="email" placeholder="Email">
+                    <input class="f-input span-2" type="text"  placeholder="Subject">
+                </div>
+
+                <div class="f-card">
+                    <span class="f-card-title">What's the problem?</span>
+                    <div class="f-radio-row">
+                        <label class="f-radio"><input type="radio" name="problem" value="malware"> Malware</label>
+                        <label class="f-radio"><input type="radio" name="problem" value="down"> Website down</label>
+                        <label class="f-radio"><input type="radio" name="problem" value="tech"> Technical problems</label>
+                        <label class="f-radio"><input type="radio" name="problem" value="content"> Content update</label>
+                        <label class="f-radio"><input type="radio" name="problem" value="other"> Others</label>
+                    </div>
+                </div>
+
+                <div class="f-textarea-card">
+                    <span class="f-card-title">Describe the issue in detail:</span>
+                    <span class="f-hint">Include any error message, relevant URLs, or screenshot to help us better understand and resolve the problem.</span>
+                    <textarea class="f-textarea"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-footer">
+            <label class="consent">
+                <input type="checkbox">
+                I understand my personal information such as name, email address, IP address, etc. will be stored in database.
+            </label>
+            <div class="btn-row">
+                <button type="submit" form="rescue-form" class="btn-submit">
+                    Submit Form <img src="hero-button-icon.svg" alt="">
+                </button>
+                <button type="reset" form="rescue-form" class="btn-submit">
+                    Reset Form <img src="hero-button-icon.svg" alt="">
+                </button>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- ================================================
+         SECTION 4 — FOOTER
+    ================================================ -->
+    <footer class="footer">
+        <img class="footer__bear" src="img-footer-peeking.png" alt="Peeking bear">
+    </footer>
+
+
+    <!-- ================================================
+         PARALLAX SCROLL CONTROLLER
+         Reads scroll position within the hero-scroll-zone.
+         Once the user scrolls past 30% of the extra zone
+         (i.e. 30vh of the extra 100vh), the reveal fires.
+         The hero then shows its fully-assembled state.
+         After the user scrolls past the full zone, the
+         sticky hero scrolls away and the page continues.
+    ================================================ -->
+    <script>
+        (function () {
+            var hero      = document.querySelector('.hero');
+            var zone      = document.querySelector('.hero-scroll-zone');
+            var revealed  = false;
+
+            function onScroll() {
+                var zoneTop    = zone.getBoundingClientRect().top + window.scrollY;
+                var zoneHeight = zone.offsetHeight;               /* 200vh */
+                var heroHeight = hero.offsetHeight;               /* 50vw  */
+
+                /* Extra scroll room = total zone height - hero height */
+                var scrollRoom = zoneHeight - heroHeight;
+
+                /* How far the user has scrolled into the extra room */
+                var scrolled = Math.max(0, window.scrollY - zoneTop);
+
+                /* Normalised progress 0 → 1 across the scroll room */
+                var progress = Math.min(scrolled / scrollRoom, 1);
+
+                /* Fire the reveal once progress crosses 25% */
+                if (!revealed && progress >= 0.25) {
+                    hero.classList.add('is-revealed');
+                    revealed = true;
+                }
+
+                /* Optional: un-reveal if user scrolls back to very top */
+                if (revealed && progress < 0.05) {
+                    hero.classList.remove('is-revealed');
+                    revealed = false;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            /* Run once on load in case page is already scrolled */
+            onScroll();
+        })();
+    </script>
+
+</body>
+</html>
