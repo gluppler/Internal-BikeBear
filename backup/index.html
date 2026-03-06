@@ -24,7 +24,7 @@
 
         /* Line-break utility: .line spans replace all hard line breaks */
         .line { display: block; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
         body { background: var(--yellow); overflow-x: hidden; width: 100%; }
 
 
@@ -985,6 +985,44 @@
         }
 
 
+        /* ==============================================
+           TEXT REVEAL ANIMATIONS
+           IntersectionObserver adds .in-view to trigger.
+           data-delay attribute on element sets stagger.
+        ============================================== */
+        .reveal-clip {
+            display: block;
+            overflow: hidden;
+        }
+        .reveal-text,
+        .reveal-lift,
+        .reveal-scale {
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(1em);
+        }
+        .reveal-lift {
+            display: block;
+            opacity: 0;
+            transform: translateY(110%);
+        }
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        .reveal-text.in-view,
+        .reveal-lift.in-view,
+        .reveal-scale.in-view {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Restore fast hover transition on buttons that carry reveal-scale */
+        .pricing__btn { transition: transform 0.2s ease; }
+
+
     </style>
 </head>
 <body>
@@ -1053,40 +1091,43 @@
     ================================================ -->
     <section class="package">
 
-        <h2 class="package__title"><span class="line">Here's how the</span><span class="line">rescue works</span></h2>
+        <h2 class="package__title">
+            <span class="reveal-clip"><span class="line reveal-lift">Here's how the</span></span>
+            <span class="reveal-clip"><span class="line reveal-lift" data-delay="0.08">rescue works</span></span>
+        </h2>
 
         <div class="steps">
             <div class="step">
-                <div class="step__num">01</div>
-                <span class="step__label"><span class="line">Buy</span><span class="line">Points</span></span>
+                <div class="step__num reveal-scale">01</div>
+                <span class="step__label reveal-text" data-delay="0.05"><span class="line">Buy</span><span class="line">Points</span></span>
             </div>
             <div class="step">
-                <div class="step__num">02</div>
-                <span class="step__label"><span class="line">Submit</span><span class="line">Request</span></span>
+                <div class="step__num reveal-scale" data-delay="0.1">02</div>
+                <span class="step__label reveal-text" data-delay="0.15"><span class="line">Submit</span><span class="line">Request</span></span>
             </div>
             <div class="step">
-                <div class="step__num">03</div>
-                <span class="step__label"><span class="line">Done &amp;</span><span class="line">Sorted</span></span>
+                <div class="step__num reveal-scale" data-delay="0.2">03</div>
+                <span class="step__label reveal-text" data-delay="0.25"><span class="line">Done &amp;</span><span class="line">Sorted</span></span>
             </div>
         </div>
 
         <div class="pricing">
             <div class="pricing__left">
-                <div class="pricing__num">04</div>
-                <div class="pricing__label">Credits / RM800</div>
+                <div class="pricing__num reveal-scale">04</div>
+                <div class="pricing__label reveal-text" data-delay="0.1">Credits / RM800</div>
             </div>
             <div class="pricing__mid">
-                <h3>Pricing</h3>
-                <p class="expires">Expires in 1 year</p>
+                <h3><span class="reveal-clip"><span class="reveal-lift">Pricing</span></span></h3>
+                <p class="expires reveal-text" data-delay="0.1">Expires in 1 year</p>
                 <ul class="pricing__list">
-                    <li>One-time purchase</li>
-                    <li>Used for all purposes</li>
-                    <li>Bulk buy</li>
-                    <li>Expires in 1 year</li>
+                    <li class="reveal-text">One-time purchase</li>
+                    <li class="reveal-text" data-delay="0.08">Used for all purposes</li>
+                    <li class="reveal-text" data-delay="0.16">Bulk buy</li>
+                    <li class="reveal-text" data-delay="0.24">Expires in 1 year</li>
                 </ul>
             </div>
             <img class="pricing__bear" src="img-peeking-bear.png" alt="">
-            <a href="#form" class="pricing__btn">BUY NOW</a>
+            <a href="#form" class="pricing__btn reveal-scale">BUY NOW</a>
         </div>
 
     </section>
@@ -1097,8 +1138,8 @@
     ================================================ -->
     <section id="form" class="form-section">
 
-        <h2>Make Your Move</h2>
-        <p class="sub">
+        <h2><span class="reveal-clip"><span class="reveal-lift">Make Your Move</span></span></h2>
+        <p class="sub reveal-text" data-delay="0.15">
             <span class="line">You've got points. You've got purpose.</span><span class="line">Now tell us what needs fixing, and we'll get straight to work.</span>
         </p>
 
@@ -1204,6 +1245,32 @@
 
             /* Run once on load in case page is already scrolled */
             onScroll();
+
+            /* ── TEXT REVEAL (IntersectionObserver) ── */
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        var el = entry.target;
+                        if (el.classList.contains('reveal-clip')) {
+                            el.querySelectorAll('.reveal-lift').forEach(function (lift) {
+                                var d = lift.dataset.delay;
+                                if (d) lift.style.transitionDelay = d + 's';
+                                lift.classList.add('in-view');
+                            });
+                        } else {
+                            var delay = el.dataset.delay;
+                            if (delay) el.style.transitionDelay = delay + 's';
+                            el.classList.add('in-view');
+                        }
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.reveal-text, .reveal-scale, .reveal-clip').forEach(function (el) {
+                observer.observe(el);
+            });
+
         })();
     </script>
 

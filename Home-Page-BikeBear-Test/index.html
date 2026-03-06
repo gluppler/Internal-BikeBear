@@ -40,7 +40,6 @@
         .hero-scroll-zone {
             position: relative;
             height: 200vh;   /* 100vh = hero visible + 100vh of scroll room */
-            background: var(--black);
         }
 
 
@@ -211,8 +210,8 @@
             z-index: 10;
             transition: transform 0.2s ease;
         }
-        .hero__cta:hover  { transform: scale(1.05) !important; }
-        .hero__cta:active { transform: scale(0.97) !important; }
+        .hero__cta:hover  { transform: scale(1.05); }
+        .hero__cta:active { transform: scale(0.97); }
         .hero__cta img { width: 1.32vw; height: 1.32vw; }
 
         /* --- Slider strip pinned to hero bottom --- */
@@ -625,7 +624,7 @@
             display: flex;
             align-items: center;
             gap: 0.69vw;
-            transition: transform 0.2s;
+            transition: transform 0.2s ease;
         }
         .btn-submit:hover  { transform: scale(1.05); }
         .btn-submit:active { transform: scale(0.97); }
@@ -739,47 +738,48 @@
         @media (max-width: 768px) {
 
             /* ── HERO ── */
-            .hero-scroll-zone { height: 260vw; background: var(--black); overflow: hidden; }
-            .hero              { height: 170vw; }
+            .hero-scroll-zone { height: 250vh; background: var(--black); overflow: hidden; }
+            .hero              { height: 100vh; height: 100svh; }
+            .hero__bg          { object-position: center top; }
 
             .hero__title {
                 top: 3%;
                 font-size: 13vw;
-                line-height: 13.5vw;
+                line-height: 14vw;
                 letter-spacing: -0.4vw;
             }
 
-            .hero__logo        { width: 10%; top: 0; left: 0; }
-            .hero__bear        { width: 105%; }
-            .hero__jupiter     { width: 18%; left: 16%; top: 4%; }
+            .hero__logo        { width: 9%; top: 2%; left: 2%; }
+            .hero__bear        { width: auto; height: 80%; top: 20%; bottom: auto; }
+            .hero__jupiter     { width: 18%; left: 14%; top: 10%; }
 
-            .hero__cloud-left        { width: 44%; top: 6%; }
-            .hero__cloud-bottom-left { width: 55%; }
-            .hero__cloud-right       { width: 46%; }
-            .hero__cloud-right-mid   { width: 58%; }
+            .hero__cloud-left        { width: 44%; top: 5%; }
+            .hero__cloud-bottom-left { width: 55%; bottom: 0; }
+            .hero__cloud-right       { width: 46%; top: 0; }
+            .hero__cloud-right-mid   { width: 58%; bottom: 0; }
 
             .hero__subtext {
                 top: auto;
-                bottom: 22%;
+                bottom: 18%;
                 left: 4%;
-                width: 46%;
-                font-size: 3.6vw;
+                width: 44%;
+                font-size: 3.2vw;
                 line-height: 120%;
                 letter-spacing: -0.1vw;
             }
 
             .hero__cta {
-                bottom: 22%;
+                bottom: 18%;
                 right: 4%;
-                padding: 3vw 4.5vw;
-                font-size: 3vw;
-                border-radius: 3.5vw;
-                gap: 2vw;
+                padding: 2.8vw 4.5vw;
+                font-size: 2.8vw;
+                border-radius: 3vw;
+                gap: 1.5vw;
             }
-            .hero__cta img     { width: 4vw; height: 4vw; }
+            .hero__cta img     { width: 3.5vw; height: 3.5vw; }
 
-            .hero__slider      { height: 12%; }
-            .slider-card       { width: 48vw; height: 12vw; font-size: 3.8vw; border-radius: 3.5vw; margin: 0 2vw; padding: 0 3vw; }
+            .hero__slider      { height: 13%; }
+            .slider-card       { width: 48vw; height: 11vw; font-size: 3.5vw; border-radius: 3.5vw; margin: 0 2vw; padding: 0 3vw; }
 
             /* ── PACKAGE ── */
             .package { height: auto; padding: 14vw 5vw 12vw; justify-content: flex-start; }
@@ -874,8 +874,8 @@
             .consent          { font-size: 3.5vw; gap: 3vw; margin-bottom: 5vw; align-items: flex-start; }
             .consent input    { width: 5vw; height: 5vw; margin-top: 0.8vw; }
 
-            .btn-row          { gap: 3.5vw; flex-wrap: wrap; }
-            .btn-submit       { padding: 3.5vw 6vw; font-size: 3.8vw; border-radius: 3.5vw; gap: 2.5vw; }
+            .btn-row          { gap: 3.5vw; flex-wrap: nowrap; }
+            .btn-submit       { padding: 3.5vw 6vw; font-size: 3.8vw; border-radius: 3.5vw; gap: 2.5vw; flex: 1; justify-content: center; }
             .btn-submit img   { width: 5vw; height: 5vw; }
 
             /* ── FOOTER ── */
@@ -900,7 +900,7 @@
         }
         .reveal-text {
             opacity: 0;
-            transform: translateY(24px);
+            transform: translateY(1em);
         }
         .reveal-lift {
             display: block;
@@ -917,6 +917,76 @@
             opacity: 1;
             transform: none;
         }
+
+        /* Restore fast hover transition on buttons that carry reveal-scale */
+        .pricing__btn { transition: transform 0.2s ease; }
+
+
+        /* ==============================================
+           HERO ENTRY ANIMATIONS
+           CSS keyframes assemble the hero on page load.
+           JS drives EXIT only. clearParallax() removes
+           all inline overrides; fill-mode:both holds the
+           'to' state so elements stay visible on scroll-
+           back without replaying the animation.
+        ============================================== */
+
+        @keyframes hero-in-cloud-L {
+            from { opacity: 0; transform: translateX(-15%); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-cloud-R {
+            from { opacity: 0; transform: translateX(15%); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-cloud-BL {
+            from { opacity: 0; transform: translateX(-12%) translateY(10%); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-cloud-RM {
+            from { opacity: 0; transform: translateX(12%) translateY(10%); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-jupiter {
+            from { opacity: 0; transform: translateY(-8%) scale(0.85); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-bear {
+            from { opacity: 0; transform: translateX(-50%) translateY(15%); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes hero-in-title {
+            from { opacity: 0; transform: translateY(1em); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-slider {
+            from { opacity: 0; transform: translateY(30%); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-logo {
+            from { opacity: 0; transform: scale(0.8); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-subtext {
+            from { opacity: 0; transform: translateY(1em); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes hero-in-cta {
+            from { opacity: 0; transform: translateY(1em); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        .hero__cloud-left        { animation: hero-in-cloud-L  0.8s cubic-bezier(0.22,1,0.36,1) 0.00s both; }
+        .hero__cloud-right       { animation: hero-in-cloud-R  0.8s cubic-bezier(0.22,1,0.36,1) 0.05s both; }
+        .hero__cloud-bottom-left { animation: hero-in-cloud-BL 0.8s cubic-bezier(0.22,1,0.36,1) 0.08s both; }
+        .hero__cloud-right-mid   { animation: hero-in-cloud-RM 0.8s cubic-bezier(0.22,1,0.36,1) 0.10s both; }
+        .hero__jupiter           { animation: hero-in-jupiter  0.7s cubic-bezier(0.22,1,0.36,1) 0.15s both; }
+        .hero__bear              { animation: hero-in-bear     0.9s cubic-bezier(0.22,1,0.36,1) 0.30s both; }
+        .hero__title             { animation: hero-in-title    0.7s cubic-bezier(0.22,1,0.36,1) 0.35s both; }
+        .hero__slider            { animation: hero-in-slider   0.6s cubic-bezier(0.22,1,0.36,1) 0.40s both; }
+        .hero__logo              { animation: hero-in-logo     0.5s cubic-bezier(0.22,1,0.36,1) 0.45s both; }
+        .hero__subtext           { animation: hero-in-subtext  0.6s cubic-bezier(0.22,1,0.36,1) 0.50s both; }
+        .hero__cta               { animation: hero-in-cta      0.6s cubic-bezier(0.22,1,0.36,1) 0.55s both; }
 
 
     </style>
@@ -1129,7 +1199,6 @@
 
             function clearParallax() {
                 /* Remove all inline overrides — CSS load-animation state resumes */
-                heroBg.style.opacity            = '';
                 cloudLeft.style.transform       = '';  cloudLeft.style.opacity         = '';
                 cloudBottomLeft.style.transform = '';  cloudBottomLeft.style.opacity   = '';
                 cloudRight.style.transform      = '';  cloudRight.style.opacity        = '';
@@ -1189,8 +1258,13 @@
 
                 /* ── CTA — exits RIGHT ── */
                 t = lp(p, 0.22, 0.46);
-                cta.style.transform = 'translateX(' + (120 * t) + '%)';
-                cta.style.opacity   = String(1 - t);
+                if (t > 0) {
+                    cta.style.transform = 'translateX(' + (120 * t) + '%)';
+                    cta.style.opacity   = String(1 - t);
+                } else {
+                    cta.style.transform = '';
+                    cta.style.opacity   = '';
+                }
 
                 /* ── CLOUD LEFT — exits LEFT + UP ── */
                 t = lp(p, 0.30, 0.55);
@@ -1216,10 +1290,6 @@
                 t = lp(p, 0.62, 0.95);
                 bear.style.transform = 'translateX(-50%) translateY(' + (-150 * t) + '%) scale(' + (1 + 0.1 * t) + ')';
                 bear.style.opacity   = String(1 - t);
-
-                /* ── BACKGROUND IMAGE — fades to black after bear exits ── */
-                t = lp(p, 0.85, 1.0);
-                heroBg.style.opacity = String(1 - t);
 
                 ticking = false;
             }
