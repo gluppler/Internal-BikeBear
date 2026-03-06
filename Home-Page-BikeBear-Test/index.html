@@ -30,32 +30,32 @@
 
         /* ==============================================
            HERO SCROLL ZONE
-           A tall container that creates the scroll space
-           for the parallax intro. The hero sticks to the
-           top of the viewport while the user scrolls
-           through this zone. Once they exit the zone the
-           hero scrolls away and the rest of the page
-           continues normally.
+           Pure scroll room — 200vh of invisible space.
+           The fixed hero always covers this area.
+           Sections below (z-index: 2) slide over the
+           fixed hero as the user scrolls through.
         ============================================== */
         .hero-scroll-zone {
             position: relative;
-            height: 200vh;   /* 100vh = hero visible + 100vh of scroll room */
+            height: 200vh;
+            background: var(--black);
         }
 
 
         /* ==============================================
            HERO SECTION
-           Sticky so it stays on-screen during the intro
-           scroll.
-           overflow:hidden clips everything to the frame.
+           Fixed — always covers the full viewport.
+           Sections below (z-index: 2) slide over it
+           as the user scrolls past the scroll zone.
         ============================================== */
         .hero {
-            position: sticky;
+            position: fixed;
             top: 0;
             width: 100%;
-            height: 50vw;
+            height: 100vh;
+            height: 100svh;
             overflow: hidden;
-            z-index: 2;
+            z-index: 1;
         }
 
 
@@ -208,10 +208,7 @@
             gap: 0.69vw;
             white-space: nowrap;
             z-index: 10;
-            transition: transform 0.2s ease;
         }
-        .hero__cta:hover  { transform: scale(1.05); }
-        .hero__cta:active { transform: scale(0.97); }
         .hero__cta img { width: 1.32vw; height: 1.32vw; }
 
         /* --- Slider strip pinned to hero bottom --- */
@@ -264,7 +261,7 @@
         ============================================== */
         .package {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             width: 100%;
             height: 56.39vw;
             background: var(--black);
@@ -471,6 +468,8 @@
            FORM SECTION
         ============================================== */
         .form-section {
+            position: relative;
+            z-index: 2;
             width: 100%;
             background: var(--yellow);
             display: flex;
@@ -635,6 +634,8 @@
            FOOTER
         ============================================== */
         .footer {
+            position: relative;
+            z-index: 2;
             width: 100%;
             background: var(--yellow);
             display: flex;
@@ -652,12 +653,11 @@
         @media (max-width: 1024px) {
 
             /* ── HERO ── */
-            .hero-scroll-zone { height: 185vh; }
-            .hero              { height: 68vw; }
+            .hero-scroll-zone  { height: 200vh; }
 
             .hero__title       { font-size: 9.5vw; line-height: 10vw; letter-spacing: -0.28vw; top: 3%; }
             .hero__logo        { width: 5%; top: 0; left: 0; }
-            .hero__bear        { width: 70%; }
+            .hero__bear        { width: 70%; height: auto; }
             .hero__jupiter     { width: 12%; left: 13%; top: 5%; }
             .hero__cloud-left  { width: 27%; }
             .hero__cloud-bottom-left { width: 33%; }
@@ -665,20 +665,23 @@
             .hero__cloud-right-mid   { width: 36%; }
 
             .hero__subtext {
-                top: 65%;
+                top: auto;
+                bottom: 17%;
                 left: 3%;
                 width: 26%;
                 font-size: 1.5vw;
                 line-height: 120%;
+                z-index: 30;
             }
 
             .hero__cta {
-                bottom: 18%;
+                bottom: 17%;
                 right: 3%;
                 padding: 1.2vw 2vw;
                 font-size: 1.1vw;
                 border-radius: 1.8vw;
                 gap: 0.9vw;
+                z-index: 30;
             }
             .hero__cta img { width: 1.8vw; height: 1.8vw; }
 
@@ -738,48 +741,49 @@
         @media (max-width: 768px) {
 
             /* ── HERO ── */
-            .hero-scroll-zone { height: 250vh; background: var(--black); overflow: hidden; }
-            .hero              { height: 100vh; height: 100svh; }
+            .hero-scroll-zone  { height: 250vh; }
             .hero__bg          { object-position: center top; }
 
             .hero__title {
                 top: 3%;
-                font-size: 13vw;
-                line-height: 14vw;
-                letter-spacing: -0.4vw;
+                font-size: 11vw;
+                line-height: 12.5vw;
+                letter-spacing: -0.3vw;
             }
 
-            .hero__logo        { width: 9%; top: 2%; left: 2%; }
-            .hero__bear        { width: auto; height: 80%; top: 20%; bottom: auto; }
-            .hero__jupiter     { width: 18%; left: 14%; top: 10%; }
+            .hero__logo        { width: 7%; top: 2%; left: 2%; }
+            .hero__bear        { width: 80%; height: auto; top: auto; bottom: 11%; }
+            .hero__jupiter     { width: 15%; left: 5%; top: 24%; }
 
-            .hero__cloud-left        { width: 44%; top: 5%; }
-            .hero__cloud-bottom-left { width: 55%; bottom: 0; }
-            .hero__cloud-right       { width: 46%; top: 0; }
-            .hero__cloud-right-mid   { width: 58%; bottom: 0; }
+            .hero__cloud-left        { width: 42%; top: 4%; }
+            .hero__cloud-bottom-left { width: 52%; bottom: 0; }
+            .hero__cloud-right       { width: 44%; top: 0; }
+            .hero__cloud-right-mid   { width: 56%; bottom: 0; }
 
             .hero__subtext {
                 top: auto;
-                bottom: 18%;
-                left: 4%;
-                width: 44%;
-                font-size: 3.2vw;
+                bottom: 13%;
+                left: 3%;
+                width: 50%;
+                font-size: 2.8vw;
                 line-height: 120%;
                 letter-spacing: -0.1vw;
+                z-index: 30;
             }
 
             .hero__cta {
-                bottom: 18%;
-                right: 4%;
-                padding: 2.8vw 4.5vw;
-                font-size: 2.8vw;
-                border-radius: 3vw;
-                gap: 1.5vw;
+                bottom: 13%;
+                right: 3%;
+                padding: 2.5vw 4vw;
+                font-size: 2.5vw;
+                border-radius: 2.5vw;
+                gap: 1.2vw;
+                z-index: 30;
             }
-            .hero__cta img     { width: 3.5vw; height: 3.5vw; }
+            .hero__cta img     { width: 3vw; height: 3vw; }
 
-            .hero__slider      { height: 13%; }
-            .slider-card       { width: 48vw; height: 11vw; font-size: 3.5vw; border-radius: 3.5vw; margin: 0 2vw; padding: 0 3vw; }
+            .hero__slider      { height: 11%; }
+            .slider-card       { width: 46vw; height: 10.5vw; font-size: 3.3vw; border-radius: 3.5vw; margin: 0 2vw; padding: 0 3vw; }
 
             /* ── PACKAGE ── */
             .package { height: auto; padding: 14vw 5vw 12vw; justify-content: flex-start; }
@@ -918,17 +922,22 @@
             transform: none;
         }
 
-        /* Restore fast hover transition on buttons that carry reveal-scale */
+        /* Restore fast hover on buttons that carry reveal-scale */
         .pricing__btn { transition: transform 0.2s ease; }
+        .pricing__btn:hover  { transform: scale(1.05); }
+        .pricing__btn:active { transform: scale(0.97); }
+
+        /* CTA uses reveal-scale for entry — redeclare here so hover wins the cascade */
+        .hero__cta { transition: transform 0.2s ease, opacity 0.7s ease; }
+        .hero__cta:hover  { transform: scale(1.05); }
+        .hero__cta:active { transform: scale(0.97); }
 
 
         /* ==============================================
            HERO ENTRY ANIMATIONS
-           CSS keyframes assemble the hero on page load.
-           JS drives EXIT only. clearParallax() removes
-           all inline overrides; fill-mode:both holds the
-           'to' state so elements stay visible on scroll-
-           back without replaying the animation.
+           CSS keyframes assemble clouds, bear, logo,
+           slider, and CTA on page load (fill-mode:both).
+           Title and subtext use reveal-clip/lift via IO.
         ============================================== */
 
         @keyframes hero-in-cloud-L {
@@ -955,10 +964,6 @@
             from { opacity: 0; transform: translateX(-50%) translateY(15%); }
             to   { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-        @keyframes hero-in-title {
-            from { opacity: 0; transform: translateY(1em); }
-            to   { opacity: 1; transform: none; }
-        }
         @keyframes hero-in-slider {
             from { opacity: 0; transform: translateY(30%); }
             to   { opacity: 1; transform: none; }
@@ -967,26 +972,14 @@
             from { opacity: 0; transform: scale(0.8); }
             to   { opacity: 1; transform: none; }
         }
-        @keyframes hero-in-subtext {
-            from { opacity: 0; transform: translateY(1em); }
-            to   { opacity: 1; transform: none; }
-        }
-        @keyframes hero-in-cta {
-            from { opacity: 0; transform: translateY(1em); }
-            to   { opacity: 1; transform: none; }
-        }
-
         .hero__cloud-left        { animation: hero-in-cloud-L  0.8s cubic-bezier(0.22,1,0.36,1) 0.00s both; }
         .hero__cloud-right       { animation: hero-in-cloud-R  0.8s cubic-bezier(0.22,1,0.36,1) 0.05s both; }
         .hero__cloud-bottom-left { animation: hero-in-cloud-BL 0.8s cubic-bezier(0.22,1,0.36,1) 0.08s both; }
         .hero__cloud-right-mid   { animation: hero-in-cloud-RM 0.8s cubic-bezier(0.22,1,0.36,1) 0.10s both; }
         .hero__jupiter           { animation: hero-in-jupiter  0.7s cubic-bezier(0.22,1,0.36,1) 0.15s both; }
         .hero__bear              { animation: hero-in-bear     0.9s cubic-bezier(0.22,1,0.36,1) 0.30s both; }
-        .hero__title             { animation: hero-in-title    0.7s cubic-bezier(0.22,1,0.36,1) 0.35s both; }
         .hero__slider            { animation: hero-in-slider   0.6s cubic-bezier(0.22,1,0.36,1) 0.40s both; }
         .hero__logo              { animation: hero-in-logo     0.5s cubic-bezier(0.22,1,0.36,1) 0.45s both; }
-        .hero__subtext           { animation: hero-in-subtext  0.6s cubic-bezier(0.22,1,0.36,1) 0.50s both; }
-        .hero__cta               { animation: hero-in-cta      0.6s cubic-bezier(0.22,1,0.36,1) 0.55s both; }
 
 
     </style>
@@ -995,14 +988,10 @@
 
     <!-- ================================================
          HERO SCROLL ZONE
-         200vh tall. The sticky .hero sits at top:0 and
-         stays on screen while the user scrolls through
-         the extra 100vh of scroll room. JS reads scroll
-         progress across this zone and assembles the hero.
     ================================================ -->
     <div class="hero-scroll-zone">
 
-        <header class="hero">
+    <header class="hero">
 
             <!-- LAYER 0: Background — always visible on load -->
             <img class="hero__bg" src="img-background.png" alt="">
@@ -1021,11 +1010,15 @@
 
             <!-- LAYER 10: UI — logo, title, subtext, CTA -->
             <img class="hero__logo" src="logo.gif" alt="Bear to the Rescue logo">
-            <h1 class="hero__title"><span class="line">Bear To</span><span class="line">The Rescue</span></h1>
+            <h1 class="hero__title">
+                <span class="reveal-clip"><span class="line reveal-lift">Bear To</span></span>
+                <span class="reveal-clip"><span class="line reveal-lift" data-delay="0.08">The Rescue</span></span>
+            </h1>
             <p class="hero__subtext">
-                <span class="line">Your site was built to represent your brand with strength and clarity.</span><span class="line subtext__gap">We'll make sure it continues to do exactly that.</span>
+                <span class="reveal-clip"><span class="reveal-lift">Your site was built to represent your brand with strength and clarity.</span></span>
+                <span class="reveal-clip subtext__gap"><span class="reveal-lift" data-delay="0.08">We'll make sure it continues to do exactly that.</span></span>
             </p>
-            <a href="#form" class="hero__cta">
+            <a href="#form" class="hero__cta reveal-scale">
                 STRAIGHT TO FORM
                 <img src="hero-button-icon.svg" alt="">
             </a>
@@ -1047,7 +1040,7 @@
                 </div>
             </div>
 
-        </header>
+    </header>
 
     </div><!-- /.hero-scroll-zone -->
 
@@ -1174,10 +1167,9 @@
     <script>
         (function () {
 
-            /* ── SCROLL PARALLAX ── */
+            /* ── SCROLL EXIT PARALLAX ── */
             var zone            = document.querySelector('.hero-scroll-zone');
             var hero            = document.querySelector('.hero');
-            var heroBg          = document.querySelector('.hero__bg');
             var cloudLeft       = document.querySelector('.hero__cloud-left');
             var cloudBottomLeft = document.querySelector('.hero__cloud-bottom-left');
             var cloudRight      = document.querySelector('.hero__cloud-right');
@@ -1192,13 +1184,11 @@
 
             var ticking = false;
 
-            /* Normalise global p into each element's own 0→1 window */
             function lp(p, start, end) {
                 return Math.max(0, Math.min((p - start) / (end - start), 1));
             }
 
             function clearParallax() {
-                /* Remove all inline overrides — CSS load-animation state resumes */
                 cloudLeft.style.transform       = '';  cloudLeft.style.opacity         = '';
                 cloudBottomLeft.style.transform = '';  cloudBottomLeft.style.opacity   = '';
                 cloudRight.style.transform      = '';  cloudRight.style.opacity        = '';
@@ -1210,6 +1200,7 @@
                 subtext.style.transform         = '';  subtext.style.opacity           = '';
                 cta.style.transform             = '';  cta.style.opacity               = '';
                 slider.style.transform          = '';  slider.style.opacity            = '';
+                hero.style.opacity              = '';
             }
 
             function updateParallax() {
@@ -1220,15 +1211,8 @@
                 var scrolled   = Math.max(0, window.scrollY - zoneTop);
                 var p          = Math.min(scrolled / scrollRoom, 1);
 
-                if (p <= 0) {
-                    clearParallax();
-                    ticking = false;
-                    return;
-                }
+                if (p <= 0) { clearParallax(); ticking = false; return; }
 
-                /* Each element has its own [exitStart, exitEnd] window.
-                   t = 0 → at rest  |  t = 1 → fully off-screen.
-                   Reversible: scrolling back up returns elements in reverse order. */
                 var t;
 
                 /* ── SLIDER — exits DOWN ── */
@@ -1256,7 +1240,7 @@
                 subtext.style.transform = 'translateX(' + (-120 * t) + '%)';
                 subtext.style.opacity   = String(1 - t);
 
-                /* ── CTA — exits RIGHT ── */
+                /* ── CTA — exits RIGHT (only write inline when actively exiting) ── */
                 t = lp(p, 0.22, 0.46);
                 if (t > 0) {
                     cta.style.transform = 'translateX(' + (120 * t) + '%)';
@@ -1291,18 +1275,29 @@
                 bear.style.transform = 'translateX(-50%) translateY(' + (-150 * t) + '%) scale(' + (1 + 0.1 * t) + ')';
                 bear.style.opacity   = String(1 - t);
 
+                /* ── HERO — global fade, final exit ── */
+                hero.style.opacity = String(1 - lp(p, 0.80, 1.0));
+
                 ticking = false;
             }
 
             function onScroll() {
-                if (!ticking) {
-                    requestAnimationFrame(updateParallax);
-                    ticking = true;
-                }
+                if (!ticking) { requestAnimationFrame(updateParallax); ticking = true; }
             }
 
             window.addEventListener('scroll', onScroll, { passive: true });
             updateParallax();
+
+            /* ── CLEAR ANIMATION FILL AFTER ENTRY ──
+               CSS @keyframes fill-mode:both sits ABOVE inline styles in
+               the cascade, blocking JS exit-parallax transforms. As soon
+               as each element's entry animation finishes, remove it so
+               scroll-driven inline transforms work freely.             */
+            [cloudLeft, cloudRight, cloudBottomLeft, cloudRightMid, jupiter, bear, slider, logo].forEach(function(el) {
+                el.addEventListener('animationend', function() {
+                    el.style.animation = 'none';
+                }, { once: true });
+            });
 
             /* ── TEXT REVEAL (IntersectionObserver) ── */
             var observer = new IntersectionObserver(function (entries) {

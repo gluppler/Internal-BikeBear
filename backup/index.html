@@ -40,6 +40,7 @@
         .hero-scroll-zone {
             position: relative;
             height: 200vh;   /* 100vh = hero visible + 100vh of scroll room */
+            background: var(--black);
         }
 
 
@@ -1021,6 +1022,8 @@
 
         /* Restore fast hover transition on buttons that carry reveal-scale */
         .pricing__btn { transition: transform 0.2s ease; }
+        .pricing__btn:hover  { transform: scale(1.05); }
+        .pricing__btn:active { transform: scale(0.97); }
 
 
     </style>
