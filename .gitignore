@@ -1,0 +1,19 @@
+# Claude
+Home-Page-BikeBear-Test/CLAUDE.md
+
+# Common OS files
+.DS_Store
+Thumbs.db
+
+# Environments & Dependencies
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Build & Logs
+dist/
+build/
+*.log
+npm-debug.log*
+

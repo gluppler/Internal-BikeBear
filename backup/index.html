@@ -24,7 +24,7 @@
 
         /* Line-break utility: .line spans replace all hard line breaks */
         .line { display: block; }
-        html { scroll-behavior: smooth; overflow-x: hidden; }
+        html { scroll-behavior: smooth; }
         body { background: var(--yellow); overflow-x: hidden; width: 100%; }
 
 
@@ -40,7 +40,6 @@
         .hero-scroll-zone {
             position: relative;
             height: 200vh;   /* 100vh = hero visible + 100vh of scroll room */
-            background: var(--black);
         }
 
 
@@ -75,9 +74,26 @@
 
         /* ==============================================
            ALL PARALLAX ELEMENTS
-           Hero elements are fully assembled on page load.
-           JS scroll handler drives all exit transforms.
+           Default state = invisible / offset.
+           JS adds .is-revealed to drive the CSS vars.
+           Each element has its own transition-delay for
+           a staggered "assembly" effect.
         ============================================== */
+
+        /* Shared parallax element base */
+        .hero__jupiter,
+        .hero__cloud-left,
+        .hero__cloud-bottom-left,
+        .hero__cloud-right,
+        .hero__cloud-right-mid,
+        .hero__bear,
+        .hero__logo,
+        .hero__title,
+        .hero__subtext,
+        .hero__cta,
+        .hero__slider {
+            will-change: transform, opacity;
+        }
 
 
         /* --- Jupiter planet ---
@@ -88,6 +104,11 @@
             left: 12.92%;     /* of hero width               */
             width: 10.56%;    /* of hero width               */
             z-index: 2;
+
+            opacity: 0;
+            transform: translateY(-8%) scale(0.85);
+            transition: opacity 0.7s ease 0.15s,
+                        transform 0.7s ease 0.15s;
         }
 
         /* --- Left tall cloud --- */
@@ -97,6 +118,11 @@
             left: 0;
             width: 24.31%;
             z-index: 3;
+
+            opacity: 0;
+            transform: translateX(-12%);
+            transition: opacity 0.8s ease 0.05s,
+                        transform 0.8s ease 0.05s;
         }
 
         /* --- Bottom-left cloud cluster --- */
@@ -107,6 +133,10 @@
             width: 29.17%;
             z-index: 3;
 
+            opacity: 0;
+            transform: translateX(-12%);
+            transition: opacity 0.8s ease 0.1s,
+                        transform 0.8s ease 0.1s;
         }
 
         /* --- Right-side tall cloud: anchored top-right, fills ~60% of hero height --- */
@@ -117,6 +147,10 @@
             width: 29%;
             z-index: 3;
 
+            opacity: 0;
+            transform: translateX(12%);
+            transition: opacity 0.8s ease 0.05s,
+                        transform 0.8s ease 0.05s;
         }
 
         /* --- Right-bottom cloud: anchored bottom-right, fills lower half --- */
@@ -127,6 +161,10 @@
             width: 32%;
             z-index: 3;
 
+            opacity: 0;
+            transform: translateX(12%);
+            transition: opacity 0.8s ease 0.1s,
+                        transform 0.8s ease 0.1s;
         }
 
         /* --- Main flying bear: z-index 25 = above slider (20) and title (10) --- */
@@ -138,6 +176,11 @@
             transform: translateX(-50%) translateY(0);
             width: 66.67%;
             z-index: 25;
+
+            opacity: 0;
+            /* translateY: initial offset + final centering combined in JS */
+            transition: opacity 0.9s ease 0.3s,
+                        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
         }
 
         /* --- Logo: flush to top-left corner, zero gap --- */
@@ -148,6 +191,11 @@
             width: 3.61%;
             height: auto;
             z-index: 10;
+
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease 0.55s,
+                        transform 0.5s ease 0.55s;
         }
 
         /* --- Main headline --- */
@@ -166,6 +214,11 @@
             color: var(--black);
             z-index: 10;
             pointer-events: none;
+
+            opacity: 0;
+            transform: translateY(-5%);
+            transition: opacity 0.7s ease 0.45s,
+                        transform 0.7s ease 0.45s;
         }
 
         /* --- Subtext bottom-left ---
@@ -183,6 +236,11 @@
             letter-spacing: -0.056vw;
             color: var(--black);
             z-index: 10;
+
+            opacity: 0;
+            transform: translateX(-6%);
+            transition: opacity 0.6s ease 0.6s,
+                        transform 0.6s ease 0.6s;
         }
 
         .subtext__gap { margin-top: 0.83vw; }
@@ -209,11 +267,22 @@
             gap: 0.69vw;
             white-space: nowrap;
             z-index: 10;
-            transition: transform 0.2s ease;
+            transition: opacity 0.6s ease 0.65s,
+                        transform 0.6s ease 0.65s;
+
+            opacity: 0;
+            transform: translateX(6%);
         }
         .hero__cta:hover  { transform: scale(1.05) !important; }
         .hero__cta:active { transform: scale(0.97) !important; }
         .hero__cta img { width: 1.32vw; height: 1.32vw; }
+
+        /* After parallax fires, switch to fast snappy hover transition — no delay */
+        .hero.is-revealed .hero__cta {
+            transition: transform 0.2s ease;
+        }
+        .hero.is-revealed .hero__cta:hover  { transform: scale(1.05); }
+        .hero.is-revealed .hero__cta:active { transform: scale(0.97); }
 
         /* --- Slider strip pinned to hero bottom --- */
         .hero__slider {
@@ -225,6 +294,38 @@
             overflow: hidden;
             z-index: 20;
             pointer-events: none;
+
+            opacity: 0;
+            transform: translateY(30%);
+            transition: opacity 0.6s ease 0.75s,
+                        transform 0.6s ease 0.75s;
+        }
+
+
+        /* ==============================================
+           REVEALED STATE
+           JS adds .is-revealed to .hero when the scroll
+           progress threshold is crossed. Each child's
+           transition-delay creates the staggered assembly.
+        ============================================== */
+        .hero.is-revealed .hero__jupiter,
+        .hero.is-revealed .hero__cloud-left,
+        .hero.is-revealed .hero__cloud-bottom-left,
+        .hero.is-revealed .hero__cloud-right,
+        .hero.is-revealed .hero__cloud-right-mid,
+        .hero.is-revealed .hero__logo,
+        .hero.is-revealed .hero__title,
+        .hero.is-revealed .hero__subtext,
+        .hero.is-revealed .hero__cta,
+        .hero.is-revealed .hero__slider {
+            opacity: 1;
+            transform: translateX(0) translateY(0) scale(1);
+        }
+
+        /* Bear needs special treatment: keep translateX(-50%) centering */
+        .hero.is-revealed .hero__bear {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
 
@@ -739,7 +840,7 @@
         @media (max-width: 768px) {
 
             /* ── HERO ── */
-            .hero-scroll-zone { height: 260vw; background: var(--black); overflow: hidden; }
+            .hero-scroll-zone { height: 260vw; }
             .hero              { height: 170vw; }
 
             .hero__title {
@@ -884,41 +985,6 @@
         }
 
 
-        /* ==============================================
-           TEXT REVEAL ANIMATIONS
-           IntersectionObserver adds .in-view to trigger.
-           data-delay attribute on element sets stagger.
-        ============================================== */
-        .reveal-clip {
-            display: block;
-            overflow: hidden;
-        }
-        .reveal-text,
-        .reveal-lift,
-        .reveal-scale {
-            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .reveal-text {
-            opacity: 0;
-            transform: translateY(24px);
-        }
-        .reveal-lift {
-            display: block;
-            opacity: 0;
-            transform: translateY(110%);
-        }
-        .reveal-scale {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        .reveal-text.in-view,
-        .reveal-lift.in-view,
-        .reveal-scale.in-view {
-            opacity: 1;
-            transform: none;
-        }
-
-
     </style>
 </head>
 <body>
@@ -987,43 +1053,40 @@
     ================================================ -->
     <section class="package">
 
-        <h2 class="package__title">
-            <span class="reveal-clip"><span class="line reveal-lift">Here's how the</span></span>
-            <span class="reveal-clip"><span class="line reveal-lift" data-delay="0.08">rescue works</span></span>
-        </h2>
+        <h2 class="package__title"><span class="line">Here's how the</span><span class="line">rescue works</span></h2>
 
         <div class="steps">
             <div class="step">
-                <div class="step__num reveal-scale">01</div>
-                <span class="step__label reveal-text" data-delay="0.05"><span class="line">Buy</span><span class="line">Points</span></span>
+                <div class="step__num">01</div>
+                <span class="step__label"><span class="line">Buy</span><span class="line">Points</span></span>
             </div>
             <div class="step">
-                <div class="step__num reveal-scale" data-delay="0.1">02</div>
-                <span class="step__label reveal-text" data-delay="0.15"><span class="line">Submit</span><span class="line">Request</span></span>
+                <div class="step__num">02</div>
+                <span class="step__label"><span class="line">Submit</span><span class="line">Request</span></span>
             </div>
             <div class="step">
-                <div class="step__num reveal-scale" data-delay="0.2">03</div>
-                <span class="step__label reveal-text" data-delay="0.25"><span class="line">Done &amp;</span><span class="line">Sorted</span></span>
+                <div class="step__num">03</div>
+                <span class="step__label"><span class="line">Done &amp;</span><span class="line">Sorted</span></span>
             </div>
         </div>
 
         <div class="pricing">
             <div class="pricing__left">
-                <div class="pricing__num reveal-scale">04</div>
-                <div class="pricing__label reveal-text" data-delay="0.1">Credits / RM800</div>
+                <div class="pricing__num">04</div>
+                <div class="pricing__label">Credits / RM800</div>
             </div>
             <div class="pricing__mid">
-                <h3><span class="reveal-clip"><span class="reveal-lift">Pricing</span></span></h3>
-                <p class="expires reveal-text" data-delay="0.1">Expires in 1 year</p>
+                <h3>Pricing</h3>
+                <p class="expires">Expires in 1 year</p>
                 <ul class="pricing__list">
-                    <li class="reveal-text">One-time purchase</li>
-                    <li class="reveal-text" data-delay="0.08">Used for all purposes</li>
-                    <li class="reveal-text" data-delay="0.16">Bulk buy</li>
-                    <li class="reveal-text" data-delay="0.24">Expires in 1 year</li>
+                    <li>One-time purchase</li>
+                    <li>Used for all purposes</li>
+                    <li>Bulk buy</li>
+                    <li>Expires in 1 year</li>
                 </ul>
             </div>
             <img class="pricing__bear" src="img-peeking-bear.png" alt="">
-            <a href="#form" class="pricing__btn reveal-scale">BUY NOW</a>
+            <a href="#form" class="pricing__btn">BUY NOW</a>
         </div>
 
     </section>
@@ -1034,8 +1097,8 @@
     ================================================ -->
     <section id="form" class="form-section">
 
-        <h2><span class="reveal-clip"><span class="reveal-lift">Make Your Move</span></span></h2>
-        <p class="sub reveal-text" data-delay="0.15">
+        <h2>Make Your Move</h2>
+        <p class="sub">
             <span class="line">You've got points. You've got purpose.</span><span class="line">Now tell us what needs fixing, and we'll get straight to work.</span>
         </p>
 
@@ -1096,169 +1159,51 @@
 
 
     <!-- ================================================
-         SCROLL EXIT PARALLAX + TEXT REVEAL
-         Hero elements fly away individually as the user
-         scrolls through the scroll zone. Text elements
-         animate in via IntersectionObserver.
+         PARALLAX SCROLL CONTROLLER
+         Reads scroll position within the hero-scroll-zone.
+         Once the user scrolls past 30% of the extra zone
+         (i.e. 30vh of the extra 100vh), the reveal fires.
+         The hero then shows its fully-assembled state.
+         After the user scrolls past the full zone, the
+         sticky hero scrolls away and the page continues.
     ================================================ -->
     <script>
         (function () {
-
-            /* ── SCROLL PARALLAX ── */
-            var zone            = document.querySelector('.hero-scroll-zone');
-            var hero            = document.querySelector('.hero');
-            var heroBg          = document.querySelector('.hero__bg');
-            var cloudLeft       = document.querySelector('.hero__cloud-left');
-            var cloudBottomLeft = document.querySelector('.hero__cloud-bottom-left');
-            var cloudRight      = document.querySelector('.hero__cloud-right');
-            var cloudRightMid   = document.querySelector('.hero__cloud-right-mid');
-            var jupiter         = document.querySelector('.hero__jupiter');
-            var bear            = document.querySelector('.hero__bear');
-            var logo            = document.querySelector('.hero__logo');
-            var title           = document.querySelector('.hero__title');
-            var subtext         = document.querySelector('.hero__subtext');
-            var cta             = document.querySelector('.hero__cta');
-            var slider          = document.querySelector('.hero__slider');
-
-            var ticking = false;
-
-            /* Normalise global p into each element's own 0→1 window */
-            function lp(p, start, end) {
-                return Math.max(0, Math.min((p - start) / (end - start), 1));
-            }
-
-            function clearParallax() {
-                /* Remove all inline overrides — CSS load-animation state resumes */
-                heroBg.style.opacity            = '';
-                cloudLeft.style.transform       = '';  cloudLeft.style.opacity         = '';
-                cloudBottomLeft.style.transform = '';  cloudBottomLeft.style.opacity   = '';
-                cloudRight.style.transform      = '';  cloudRight.style.opacity        = '';
-                cloudRightMid.style.transform   = '';  cloudRightMid.style.opacity     = '';
-                jupiter.style.transform         = '';  jupiter.style.opacity           = '';
-                bear.style.transform            = '';  bear.style.opacity              = '';
-                logo.style.transform            = '';  logo.style.opacity              = '';
-                title.style.transform           = '';  title.style.opacity             = '';
-                subtext.style.transform         = '';  subtext.style.opacity           = '';
-                cta.style.transform             = '';  cta.style.opacity               = '';
-                slider.style.transform          = '';  slider.style.opacity            = '';
-            }
-
-            function updateParallax() {
-                var zoneTop    = zone.getBoundingClientRect().top + window.scrollY;
-                var zoneHeight = zone.offsetHeight;
-                var heroHeight = hero.offsetHeight;
-                var scrollRoom = zoneHeight - heroHeight;
-                var scrolled   = Math.max(0, window.scrollY - zoneTop);
-                var p          = Math.min(scrolled / scrollRoom, 1);
-
-                if (p <= 0) {
-                    clearParallax();
-                    ticking = false;
-                    return;
-                }
-
-                /* Each element has its own [exitStart, exitEnd] window.
-                   t = 0 → at rest  |  t = 1 → fully off-screen.
-                   Reversible: scrolling back up returns elements in reverse order. */
-                var t;
-
-                /* ── SLIDER — exits DOWN ── */
-                t = lp(p, 0.05, 0.22);
-                slider.style.transform = 'translateY(' + (120 * t) + '%)';
-                slider.style.opacity   = String(1 - t);
-
-                /* ── LOGO — exits UP-LEFT ── */
-                t = lp(p, 0.08, 0.28);
-                logo.style.transform = 'translate(' + (-40 * t) + '%, ' + (-60 * t) + '%)';
-                logo.style.opacity   = String(1 - t);
-
-                /* ── CLOUD BOTTOM-LEFT — exits LEFT + DOWN ── */
-                t = lp(p, 0.12, 0.34);
-                cloudBottomLeft.style.transform = 'translateX(' + (-100 * t) + '%) translateY(' + (110 * t) + '%)';
-                cloudBottomLeft.style.opacity   = String(1 - t);
-
-                /* ── CLOUD RIGHT-MID — exits RIGHT + DOWN ── */
-                t = lp(p, 0.15, 0.37);
-                cloudRightMid.style.transform = 'translateX(' + (100 * t) + '%) translateY(' + (110 * t) + '%)';
-                cloudRightMid.style.opacity   = String(1 - t);
-
-                /* ── SUBTEXT — exits LEFT ── */
-                t = lp(p, 0.20, 0.44);
-                subtext.style.transform = 'translateX(' + (-120 * t) + '%)';
-                subtext.style.opacity   = String(1 - t);
-
-                /* ── CTA — exits RIGHT ── */
-                t = lp(p, 0.22, 0.46);
-                cta.style.transform = 'translateX(' + (120 * t) + '%)';
-                cta.style.opacity   = String(1 - t);
-
-                /* ── CLOUD LEFT — exits LEFT + UP ── */
-                t = lp(p, 0.30, 0.55);
-                cloudLeft.style.transform = 'translateX(' + (-130 * t) + '%) translateY(' + (-20 * t) + '%)';
-                cloudLeft.style.opacity   = String(1 - t);
-
-                /* ── CLOUD RIGHT — exits RIGHT + UP ── */
-                t = lp(p, 0.32, 0.57);
-                cloudRight.style.transform = 'translateX(' + (130 * t) + '%) translateY(' + (-20 * t) + '%)';
-                cloudRight.style.opacity   = String(1 - t);
-
-                /* ── JUPITER — exits LEFT + UP ── */
-                t = lp(p, 0.40, 0.65);
-                jupiter.style.transform = 'translateX(' + (-350 * t) + '%) translateY(' + (-450 * t) + '%)';
-                jupiter.style.opacity   = String(1 - t);
-
-                /* ── TITLE — exits UP ── */
-                t = lp(p, 0.50, 0.78);
-                title.style.transform = 'translateY(' + (-120 * t) + '%)';
-                title.style.opacity   = String(1 - t);
-
-                /* ── BEAR — exits UP, last to leave ── */
-                t = lp(p, 0.62, 0.95);
-                bear.style.transform = 'translateX(-50%) translateY(' + (-150 * t) + '%) scale(' + (1 + 0.1 * t) + ')';
-                bear.style.opacity   = String(1 - t);
-
-                /* ── BACKGROUND IMAGE — fades to black after bear exits ── */
-                t = lp(p, 0.85, 1.0);
-                heroBg.style.opacity = String(1 - t);
-
-                ticking = false;
-            }
+            var hero      = document.querySelector('.hero');
+            var zone      = document.querySelector('.hero-scroll-zone');
+            var revealed  = false;
 
             function onScroll() {
-                if (!ticking) {
-                    requestAnimationFrame(updateParallax);
-                    ticking = true;
+                var zoneTop    = zone.getBoundingClientRect().top + window.scrollY;
+                var zoneHeight = zone.offsetHeight;               /* 200vh */
+                var heroHeight = hero.offsetHeight;               /* 50vw  */
+
+                /* Extra scroll room = total zone height - hero height */
+                var scrollRoom = zoneHeight - heroHeight;
+
+                /* How far the user has scrolled into the extra room */
+                var scrolled = Math.max(0, window.scrollY - zoneTop);
+
+                /* Normalised progress 0 → 1 across the scroll room */
+                var progress = Math.min(scrolled / scrollRoom, 1);
+
+                /* Fire the reveal once progress crosses 25% */
+                if (!revealed && progress >= 0.25) {
+                    hero.classList.add('is-revealed');
+                    revealed = true;
+                }
+
+                /* Optional: un-reveal if user scrolls back to very top */
+                if (revealed && progress < 0.05) {
+                    hero.classList.remove('is-revealed');
+                    revealed = false;
                 }
             }
 
             window.addEventListener('scroll', onScroll, { passive: true });
-            updateParallax();
 
-            /* ── TEXT REVEAL (IntersectionObserver) ── */
-            var observer = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        var el = entry.target;
-                        if (el.classList.contains('reveal-clip')) {
-                            el.querySelectorAll('.reveal-lift').forEach(function (lift) {
-                                var d = lift.dataset.delay;
-                                if (d) lift.style.transitionDelay = d + 's';
-                                lift.classList.add('in-view');
-                            });
-                        } else {
-                            var delay = el.dataset.delay;
-                            if (delay) el.style.transitionDelay = delay + 's';
-                            el.classList.add('in-view');
-                        }
-                        observer.unobserve(el);
-                    }
-                });
-            }, { threshold: 0.2 });
-
-            document.querySelectorAll('.reveal-text, .reveal-scale, .reveal-clip').forEach(function (el) {
-                observer.observe(el);
-            });
-
+            /* Run once on load in case page is already scrolled */
+            onScroll();
         })();
     </script>
 
