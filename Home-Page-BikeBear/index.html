@@ -37,7 +37,7 @@
         ============================================== */
         .hero-scroll-zone {
             position: relative;
-            height: 200vh;
+            height: 150vh;
             background: var(--black);
         }
 
@@ -121,11 +121,10 @@
         /* --- Right-bottom cloud: anchored bottom-right, fills lower half --- */
         .hero__cloud-right-mid {
             position: absolute;
-            bottom: 0;
-            right: 0;
+            bottom: 13%;
+            right: 11%;
             width: 32%;
             z-index: 3;
-
         }
 
         /* --- Main flying bear: z-index 25 = above slider (20) and title (10) --- */
@@ -178,13 +177,13 @@
             font-family: 'Inter', sans-serif;
             font-size: 1.39vw;
             font-weight: 700;
-            line-height: 120%;
+            line-height: 100%;
             letter-spacing: -0.056vw;
             color: var(--black);
             z-index: 10;
         }
 
-        .subtext__gap { margin-top: 0.83vw; }
+        .subtext__gap { margin-top: 1.8vw; }
 
         /* --- CTA pill bottom-right ---
              bottom: 9.72vw of viewport width.
@@ -207,6 +206,7 @@
             align-items: center;
             gap: 0.69vw;
             white-space: nowrap;
+            height: 7.5%;
             z-index: 10;
         }
         .hero__cta img { width: 1.32vw; height: 1.32vw; }
@@ -653,44 +653,46 @@
         @media (max-width: 1024px) {
 
             /* ── HERO ── */
-            .hero-scroll-zone  { height: 200vh; }
+            .hero-scroll-zone  { height: 150vh; }
 
-            .hero__title       { font-size: 9.5vw; line-height: 10vw; letter-spacing: -0.28vw; top: 3%; }
+            .hero__title       { font-size: 10.5vw; line-height: 13vw; letter-spacing: -0.28vw; top: 18%; }
             .hero__logo        { width: 5%; top: 0; left: 0; }
-            .hero__bear        { width: 70%; height: auto; }
-            .hero__jupiter     { width: 12%; left: 13%; top: 5%; }
-            .hero__cloud-left  { width: 27%; }
-            .hero__cloud-bottom-left { width: 33%; }
-            .hero__cloud-right { width: 32%; }
-            .hero__cloud-right-mid   { width: 36%; }
+            .hero__bear        { width: 100%; height: auto; top: 32%; }
+            .hero__jupiter     { width: 30%; left: 6%; top: 10%; }
+            .hero__cloud-left        { width: 75%; top: 33%; }
+            .hero__cloud-bottom-left { width: 43%; }
+            .hero__cloud-right       { width: 60%; }
+            .hero__cloud-right-mid   { width: 75%; }
 
             .hero__subtext {
                 top: auto;
-                bottom: 17%;
+                bottom: 18%;
                 left: 3%;
-                width: 26%;
-                font-size: 1.5vw;
-                line-height: 120%;
+                width: 40%;
+                font-size: 3vw;
+                line-height: 100%;
                 z-index: 30;
             }
+            .subtext__gap { margin-top: 3.9vw; }
 
             .hero__cta {
                 bottom: 17%;
+                height: 6%;
                 right: 3%;
-                padding: 1.2vw 2vw;
-                font-size: 1.1vw;
+                padding: 1.8vw 2.8vw;
+                font-size: 2vw;
                 border-radius: 1.8vw;
                 gap: 0.9vw;
                 z-index: 30;
             }
-            .hero__cta img { width: 1.8vw; height: 1.8vw; }
+            .hero__cta img { width: 2.2vw; height: 2.2vw; }
 
             .hero__slider  { height: 15%; }
             .slider-card   { width: 28vw; height: 8.5vw; font-size: 2.1vw; border-radius: 2.1vw; margin: 0 1.2vw; }
 
             /* ── PACKAGE ── */
             .package { height: auto; padding: 7vw 4vw 9vw; }
-            .package__title { font-size: 3.2vw; line-height: 4.2vw; letter-spacing: -0.1vw; margin-bottom: 5vw; }
+            .package__title { font-size: 3.5vw; line-height: 5vw; letter-spacing: -0.1vw; margin-bottom: 5vw; }
 
             .steps  { gap: 2vw; margin-bottom: 6vw; }
             .step   { width: 29vw; height: 9.5vw; padding: 1vw; border-radius: 1.6vw; }
@@ -700,15 +702,16 @@
             .pricing          { width: 82vw; height: auto; padding: 3vw; gap: 2.5vw; border-radius: 2vw; }
             .pricing__num     { font-size: 10vw; }
             .pricing__label   { font-size: 1.4vw; }
-            .pricing__mid h3  { font-size: 3.2vw; line-height: 4vw; }
+            .pricing__mid h3  { font-size: 3.5vw; line-height: 5vw; }
             .pricing__mid .expires { font-size: 1.8vw; }
             .pricing__list li { font-size: 1.7vw; }
             .pricing__list li::before { width: 1.7vw; height: 1.7vw; }
             .pricing__btn     { font-size: 1.8vw; padding: 1.3vw 2.6vw; }
+            .pricing__bear    { left: 38%; top: 7%; width: 75%; }
 
             /* ── FORM ── */
             .form-section     { padding-top: 9vw; }
-            .form-section h2  { font-size: 5.5vw; line-height: 7vw; }
+            .form-section h2  { font-size: 5.5vw; line-height: 8vw; }
             .form-section .sub { font-size: 1.7vw; }
             .form-box         { width: 90vw; padding: 3.5vw; border-radius: 2.5vw; margin-top: 3vw; }
             .form-grid        { gap: 1.8vw; margin-bottom: 1.8vw; }
@@ -741,53 +744,56 @@
         @media (max-width: 768px) {
 
             /* ── HERO ── */
-            .hero-scroll-zone  { height: 250vh; }
-            .hero__bg          { object-position: center top; }
+            .hero-scroll-zone  { height: 150vh; }
+            .hero__bg          { object-position: center center; }
 
             .hero__title {
-                top: 3%;
-                font-size: 11vw;
-                line-height: 12.5vw;
-                letter-spacing: -0.3vw;
+                top: 24%;
+                font-size: 13vw;
+                line-height: 17vw;
+                letter-spacing: -0.35vw;
             }
 
-            .hero__logo        { width: 7%; top: 2%; left: 2%; }
-            .hero__bear        { width: 80%; height: auto; top: auto; bottom: 11%; }
-            .hero__jupiter     { width: 15%; left: 5%; top: 24%; }
+            .hero__logo        { width: 8%; top: 1.5%; left: 2%; }
+            .hero__bear        { width: 100%; height: auto; top: auto; bottom: 40%; left: 50%; transform: translateX(-50%); }
+            .hero__jupiter     { position: absolute; top: 4.44%; left: 12.92%; width: 33%; z-index: 2; }
 
-            .hero__cloud-left        { width: 42%; top: 4%; }
-            .hero__cloud-bottom-left { width: 52%; bottom: 0; }
-            .hero__cloud-right       { width: 44%; top: 0; }
-            .hero__cloud-right-mid   { width: 56%; bottom: 0; }
+            .hero__cloud-left        { width: 75%; top: 18%; left: 0; }
+            .hero__cloud-bottom-left { width: 96%; bottom: 0; left: 0; }
+            .hero__cloud-right       { width: 96%; top: 0; right: 0; }
+            .hero__cloud-right-mid   { width: 96%; bottom: 22%; right: 0; }
 
             .hero__subtext {
                 top: auto;
-                bottom: 13%;
+                bottom: 25.5%;
                 left: 3%;
-                width: 50%;
-                font-size: 2.8vw;
-                line-height: 120%;
+                width: 48%;
+                font-size: 3.8vw;
+                line-height: 130%;
                 letter-spacing: -0.1vw;
-                z-index: 30;
+                z-index: 35;
             }
+            .subtext__gap { margin-top: 5vw; }
 
             .hero__cta {
-                bottom: 13%;
-                right: 3%;
-                padding: 2.5vw 4vw;
-                font-size: 2.5vw;
-                border-radius: 2.5vw;
-                gap: 1.2vw;
-                z-index: 30;
+                bottom: 17%;
+                right: 22%;
+                top: auto;
+                height: 6%;
+                padding: 4vw 5.5vw;
+                font-size: 3.8vw;
+                border-radius: 3.5vw;
+                gap: 2vw;
+                z-index: 35;
             }
-            .hero__cta img     { width: 3vw; height: 3vw; }
+            .hero__cta img     { width: 4.5vw; height: 4.5vw; }
 
-            .hero__slider      { height: 11%; }
-            .slider-card       { width: 46vw; height: 10.5vw; font-size: 3.3vw; border-radius: 3.5vw; margin: 0 2vw; padding: 0 3vw; }
+            .hero__slider      { height: 12%; }
+            .slider-card       { width: 52vw; height: 13vw; font-size: 4.2vw; border-radius: 4vw; margin: 0 2.5vw; padding: 0 4vw; }
 
             /* ── PACKAGE ── */
             .package { height: auto; padding: 14vw 5vw 12vw; justify-content: flex-start; }
-            .package__title { font-size: 7.5vw; line-height: 9vw; letter-spacing: -0.2vw; margin-bottom: 9vw; }
+            .package__title { font-size: 7.5vw; line-height: 11vw; letter-spacing: -0.2vw; margin-bottom: 9vw; }
 
             /* Steps stack vertically */
             .steps {
@@ -823,7 +829,7 @@
             .pricing__num     { font-size: 24vw; line-height: 1; flex: none; display: block; }
             .pricing__label   { font-size: 4vw; letter-spacing: -0.1vw; text-align: left; margin-bottom: 2vw; }
             .pricing__mid     { padding-top: 0; }
-            .pricing__mid h3  { font-size: 7vw; line-height: 8.5vw; text-align: left; }
+            .pricing__mid h3  { font-size: 7vw; line-height: 10.5vw; text-align: left; }
             .pricing__mid .expires { font-size: 4vw; margin-bottom: 3.5vw; }
             .pricing__list li { font-size: 4vw; gap: 2vw; }
             .pricing__list li::before { width: 4vw; height: 4vw; }
@@ -848,7 +854,7 @@
 
             /* ── FORM ── */
             .form-section     { padding-top: 16vw; }
-            .form-section h2  { font-size: 11vw; line-height: 13vw; letter-spacing: -0.3vw; }
+            .form-section h2  { font-size: 11vw; line-height: 15.5vw; letter-spacing: -0.3vw; }
             .form-section .sub { font-size: 4vw; margin-top: 2.5vw; letter-spacing: -0.1vw; }
 
             .form-box { width: 92vw; padding: 6vw; border-radius: 5vw; margin-top: 7vw; }
@@ -1299,15 +1305,22 @@
                 }, { once: true });
             });
 
-            /* ── TEXT REVEAL (IntersectionObserver) ── */
+            /* ── TEXT REVEAL (IntersectionObserver) ──
+               threshold: [0, 0.2]
+               - Entering (ratio ≥ 0.2): add .in-view, run transition
+               - Exiting  (ratio = 0):   remove .in-view so animation
+                 replays on every subsequent scroll-in visit.
+               Hero elements (fixed, always visible) never reach ratio=0
+               so they animate in once on load and stay visible.         */
             var observer = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        var el = entry.target;
+                    var el = entry.target;
+                    if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+                        /* Element is sufficiently in view — animate in */
                         if (el.classList.contains('reveal-clip')) {
                             el.querySelectorAll('.reveal-lift').forEach(function (lift) {
                                 var d = lift.dataset.delay;
-                                if (d) lift.style.transitionDelay = d + 's';
+                                lift.style.transitionDelay = d ? d + 's' : '';
                                 lift.classList.add('in-view');
                             });
                         } else {
@@ -1315,10 +1328,20 @@
                             if (delay) el.style.transitionDelay = delay + 's';
                             el.classList.add('in-view');
                         }
-                        observer.unobserve(el);
+                    } else if (!entry.isIntersecting) {
+                        /* Element is fully off-screen — reset for re-animation on next visit */
+                        if (el.classList.contains('reveal-clip')) {
+                            el.querySelectorAll('.reveal-lift').forEach(function (lift) {
+                                lift.style.transitionDelay = '';
+                                lift.classList.remove('in-view');
+                            });
+                        } else {
+                            el.style.transitionDelay = '';
+                            el.classList.remove('in-view');
+                        }
                     }
                 });
-            }, { threshold: 0.2 });
+            }, { threshold: [0, 0.2] });
 
             document.querySelectorAll('.reveal-text, .reveal-scale, .reveal-clip').forEach(function (el) {
                 observer.observe(el);
