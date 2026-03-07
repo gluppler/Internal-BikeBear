@@ -79,22 +79,21 @@
         ============================================== */
 
 
-        /* --- Jupiter planet ---
-             left ~13% | top ~4.4% of 50vw height = ~8.8% of width */
+        /* --- Jupiter planet --- */
         .hero__jupiter {
             position: absolute;
-            top: 4.44%;       /* of hero height (50vw) → ~32px at 1440 */
-            left: 12.92%;     /* of hero width               */
-            width: 10.56%;    /* of hero width               */
+            left: 10%;
+            width: 22%;
             z-index: 2;
+            bottom: 70%;
         }
 
         /* --- Left tall cloud --- */
         .hero__cloud-left {
             position: absolute;
-            top: 8.33%;
-            left: 0;
-            width: 24.31%;
+            top: 30%;
+            left: 0%;
+            width: 41%;
             z-index: 3;
         }
 
@@ -103,9 +102,9 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 29.17%;
+            width: 100%;
             z-index: 3;
-
+            top: 70%;
         }
 
         /* --- Right-side tall cloud: anchored top-right, fills ~60% of hero height --- */
@@ -159,7 +158,6 @@
             font-size: 5.9vw;
             font-weight: 400;
             line-height: 7.64vw;
-            letter-spacing: -0.21vw;
             text-transform: uppercase;
             color: var(--black);
             z-index: 10;
@@ -171,14 +169,13 @@
              As % of hero height (50vw): 31.53/50 = 63.06% */
         .hero__subtext {
             position: absolute;
-            top: 63.06%;
+            top: 60%;
             left: 2.78%;
             width: 18.75%;
             font-family: 'Inter', sans-serif;
             font-size: 1.39vw;
             font-weight: 700;
             line-height: 100%;
-            letter-spacing: -0.056vw;
             color: var(--black);
             z-index: 10;
         }
@@ -200,7 +197,6 @@
             font-family: 'Be Vietnam Pro', sans-serif;
             font-size: 0.83vw;
             font-weight: 600;
-            letter-spacing: 0.08vw;
             text-transform: uppercase;
             display: flex;
             align-items: center;
@@ -249,8 +245,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 1.39vw;
             font-weight: 700;
-            line-height: 120%;
-            letter-spacing: -0.056vw;
+            line-height: 100%;
             white-space: nowrap;
             padding: 0 1.74vw;
         }
@@ -278,7 +273,6 @@
             font-size: 2.08vw;
             font-weight: 400;
             line-height: 2.78vw;
-            letter-spacing: -0.035vw;
             text-transform: uppercase;
             text-align: center;
             margin-bottom: 4.17vw;
@@ -312,7 +306,6 @@
             font-size: 2.08vw;
             font-weight: 400;
             line-height: 2.78vw;
-            letter-spacing: -0.035vw;
             text-transform: uppercase;
             flex-shrink: 0;
             margin-right: 1.39vw;
@@ -323,7 +316,6 @@
             font-size: 2.08vw;
             font-weight: 400;
             line-height: 2.78vw;
-            letter-spacing: -0.035vw;
             text-transform: uppercase;
             color: var(--black);
         }
@@ -359,7 +351,6 @@
             font-size: 1.11vw;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.022vw;
             color: var(--black);
             text-align: center;
             flex-shrink: 0;
@@ -387,7 +378,6 @@
             font-size: 2.08vw;
             font-weight: 400;
             line-height: 2.78vw;
-            letter-spacing: -0.035vw;
             text-transform: uppercase;
             text-align: center;
             color: var(--black);
@@ -398,10 +388,9 @@
             font-family: 'Inter', sans-serif;
             font-size: 1.39vw;
             font-weight: 400;
-            line-height: 120%;
-            letter-spacing: -0.022vw;
+            line-height: 100%;
             color: var(--black);
-            margin-bottom: 0.83vw;
+            margin-bottom: 1.85vw;
         }
 
         .pricing__list {
@@ -413,12 +402,12 @@
         .pricing__list li {
             display: flex;
             align-items: center;
+            margin-bottom: 4%;
             gap: 0.56vw;
             font-family: 'Inter', sans-serif;
             font-size: 1.25vw;
             font-weight: 400;
-            line-height: 160%;
-            letter-spacing: -0.022vw;
+            line-height: 100%;
             color: var(--black);
         }
         .pricing__list li::before {
@@ -449,7 +438,6 @@
             font-size: 1.3vw;
             font-weight: 400;
             line-height: 2.29vw;
-            letter-spacing: -0.008vw;
             text-transform: uppercase;
             text-decoration: none;
             white-space: nowrap;
@@ -484,7 +472,6 @@
             font-size: 2.78vw;
             font-weight: 400;
             line-height: 5.9vw;
-            letter-spacing: -0.022vw;
             text-transform: uppercase;
             text-align: center;
             color: var(--black);
@@ -494,8 +481,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 1.25vw;
             font-weight: 400;
-            line-height: 120%;
-            letter-spacing: -0.022vw;
+            line-height: 100%;
             text-align: center;
             color: var(--black);
             margin-top: 0.56vw;
@@ -618,7 +604,6 @@
             font-family: 'Boldonse', sans-serif;
             font-size: 0.83vw;
             font-weight: 400;
-            letter-spacing: -0.008vw;
             text-transform: uppercase;
             display: flex;
             align-items: center;
@@ -655,18 +640,18 @@
             /* ── HERO ── */
             .hero-scroll-zone  { height: 150vh; }
 
-            .hero__title       { font-size: 10.5vw; line-height: 13vw; letter-spacing: -0.28vw; top: 18%; }
+            .hero__title       { font-size: 10.5vw; line-height: 13.5vw; top: 18%; }
             .hero__logo        { width: 5%; top: 0; left: 0; }
             .hero__bear        { width: 100%; height: auto; top: 32%; }
-            .hero__jupiter     { width: 30%; left: 6%; top: 10%; }
-            .hero__cloud-left        { width: 75%; top: 33%; }
-            .hero__cloud-bottom-left { width: 43%; }
+            .hero__jupiter     { width: 45%; left: 0%; top: 2%; }
+            .hero__cloud-left        { width: 70%; top: 45%; }
+            .hero__cloud-bottom-left { width: 100%; top: 75%; }
             .hero__cloud-right       { width: 60%; }
             .hero__cloud-right-mid   { width: 75%; }
 
             .hero__subtext {
                 top: auto;
-                bottom: 18%;
+                bottom: 14%;
                 left: 3%;
                 width: 40%;
                 font-size: 3vw;
@@ -676,7 +661,7 @@
             .subtext__gap { margin-top: 3.9vw; }
 
             .hero__cta {
-                bottom: 17%;
+                bottom: 15%;
                 height: 6%;
                 right: 3%;
                 padding: 1.8vw 2.8vw;
@@ -687,27 +672,27 @@
             }
             .hero__cta img { width: 2.2vw; height: 2.2vw; }
 
-            .hero__slider  { height: 15%; }
+            .hero__slider  { height: 11%; }
             .slider-card   { width: 28vw; height: 8.5vw; font-size: 2.1vw; border-radius: 2.1vw; margin: 0 1.2vw; }
 
             /* ── PACKAGE ── */
             .package { height: auto; padding: 7vw 4vw 9vw; }
-            .package__title { font-size: 3.5vw; line-height: 5vw; letter-spacing: -0.1vw; margin-bottom: 5vw; }
+            .package__title { font-size: 3.5vw; line-height: 5vw; margin-bottom: 5vw; }
 
             .steps  { gap: 2vw; margin-bottom: 6vw; }
             .step   { width: 29vw; height: 9.5vw; padding: 1vw; border-radius: 1.6vw; }
             .step__num   { width: 7.5vw; height: 7.5vw; font-size: 3.2vw; line-height: 3.2vw; margin-right: 1.4vw; border-radius: 1vw; }
-            .step__label { font-size: 2.6vw; line-height: 3.2vw; letter-spacing: -0.08vw; }
+            .step__label { font-size: 2.6vw; line-height: 3.2vw; }
 
             .pricing          { width: 82vw; height: auto; padding: 3vw; gap: 2.5vw; border-radius: 2vw; }
             .pricing__num     { font-size: 10vw; }
             .pricing__label   { font-size: 1.4vw; }
             .pricing__mid h3  { font-size: 3.5vw; line-height: 5vw; }
-            .pricing__mid .expires { font-size: 1.8vw; }
-            .pricing__list li { font-size: 1.7vw; }
+            .pricing__mid .expires { font-size: 1.8vw; margin-bottom: 2.4vw; }
+            .pricing__list li { font-size: 1.7vw; margin-bottom: 4%; }
             .pricing__list li::before { width: 1.7vw; height: 1.7vw; }
             .pricing__btn     { font-size: 1.8vw; padding: 1.3vw 2.6vw; }
-            .pricing__bear    { left: 38%; top: 7%; width: 75%; }
+            .pricing__bear    { left: 38%; top: 18%; width: 75%; }
 
             /* ── FORM ── */
             .form-section     { padding-top: 9vw; }
@@ -751,15 +736,14 @@
                 top: 24%;
                 font-size: 13vw;
                 line-height: 17vw;
-                letter-spacing: -0.35vw;
             }
 
             .hero__logo        { width: 8%; top: 1.5%; left: 2%; }
             .hero__bear        { width: 100%; height: auto; top: auto; bottom: 40%; left: 50%; transform: translateX(-50%); }
-            .hero__jupiter     { position: absolute; top: 4.44%; left: 12.92%; width: 33%; z-index: 2; }
+            .hero__jupiter     { position: absolute; top: 10%; left: 0%; width: 60%; z-index: 2; }
 
-            .hero__cloud-left        { width: 75%; top: 18%; left: 0; }
-            .hero__cloud-bottom-left { width: 96%; bottom: 0; left: 0; }
+            .hero__cloud-left        { width: 100%; top: 40%; left: 0; }
+            .hero__cloud-bottom-left { width: 100%; bottom: 0%; left: 0; top: 80%; }
             .hero__cloud-right       { width: 96%; top: 0; right: 0; }
             .hero__cloud-right-mid   { width: 96%; bottom: 22%; right: 0; }
 
@@ -769,8 +753,7 @@
                 left: 3%;
                 width: 48%;
                 font-size: 3.8vw;
-                line-height: 130%;
-                letter-spacing: -0.1vw;
+                line-height: 100%;
                 z-index: 35;
             }
             .subtext__gap { margin-top: 5vw; }
@@ -793,7 +776,7 @@
 
             /* ── PACKAGE ── */
             .package { height: auto; padding: 14vw 5vw 12vw; justify-content: flex-start; }
-            .package__title { font-size: 7.5vw; line-height: 11vw; letter-spacing: -0.2vw; margin-bottom: 9vw; }
+            .package__title { font-size: 7.5vw; line-height: 11vw; margin-bottom: 9vw; }
 
             /* Steps stack vertically */
             .steps {
@@ -804,7 +787,7 @@
             }
             .step        { width: 100%; height: 22vw; padding: 2.5vw; border-radius: 3.5vw; }
             .step__num   { width: 16vw; height: 16vw; font-size: 7vw; line-height: 7vw; margin-right: 4vw; border-radius: 2.5vw; }
-            .step__label { font-size: 6.5vw; line-height: 7.5vw; letter-spacing: -0.2vw; }
+            .step__label { font-size: 6.5vw; line-height: 7.5vw; }
 
             /* Pricing: two-column row on top, then mid section below */
             .pricing {
@@ -827,18 +810,18 @@
             }
 
             .pricing__num     { font-size: 24vw; line-height: 1; flex: none; display: block; }
-            .pricing__label   { font-size: 4vw; letter-spacing: -0.1vw; text-align: left; margin-bottom: 2vw; }
+            .pricing__label   { font-size: 4vw; text-align: left; margin-bottom: 2vw; }
             .pricing__mid     { padding-top: 0; }
             .pricing__mid h3  { font-size: 7vw; line-height: 10.5vw; text-align: left; }
-            .pricing__mid .expires { font-size: 4vw; margin-bottom: 3.5vw; }
-            .pricing__list li { font-size: 4vw; gap: 2vw; }
+            .pricing__mid .expires { font-size: 4vw; margin-bottom: 5.3vw; }
+            .pricing__list li { font-size: 4vw; gap: 2vw; margin-bottom: 4%; }
             .pricing__list li::before { width: 4vw; height: 4vw; }
 
             /* Bear: pull out of absolute flow on mobile */
             .pricing__bear {
                 position: absolute;
                 left: 16%;
-                top: 67%;
+                top: 68%;
                 width: 100%;
                 display: block;
                 margin: 0 auto;
@@ -854,8 +837,8 @@
 
             /* ── FORM ── */
             .form-section     { padding-top: 16vw; }
-            .form-section h2  { font-size: 11vw; line-height: 15.5vw; letter-spacing: -0.3vw; }
-            .form-section .sub { font-size: 4vw; margin-top: 2.5vw; letter-spacing: -0.1vw; }
+            .form-section h2  { font-size: 11vw; line-height: 15.5vw; }
+            .form-section .sub { font-size: 4vw; margin-top: 2.5vw; }
 
             .form-box { width: 92vw; padding: 6vw; border-radius: 5vw; margin-top: 7vw; }
 
