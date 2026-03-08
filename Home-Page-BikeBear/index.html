@@ -362,7 +362,7 @@
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
-            padding-bottom: 0.28vw;
+            padding-bottom: 1vw;
         }
 
         .pricing__mid {
@@ -1172,6 +1172,7 @@
             var slider          = document.querySelector('.hero__slider');
 
             var ticking = false;
+            var heroNeedsReveal = false;
 
             function lp(p, start, end) {
                 return Math.max(0, Math.min((p - start) / (end - start), 1));
@@ -1190,6 +1191,26 @@
                 cta.style.transform             = '';  cta.style.opacity               = '';
                 slider.style.transform          = '';  slider.style.opacity            = '';
                 hero.style.opacity              = '';
+                if (heroNeedsReveal) {
+                    heroNeedsReveal = false;
+                    var lifts = [].slice.call(document.querySelectorAll(
+                        '.hero__title .reveal-lift, .hero__subtext .reveal-lift'
+                    ));
+                    lifts.forEach(function(lift) {
+                        lift.style.transition      = 'none';
+                        lift.style.transitionDelay = '';
+                        lift.classList.remove('in-view');
+                    });
+                    lifts[0] && lifts[0].offsetHeight;
+                    requestAnimationFrame(function() {
+                        lifts.forEach(function(lift) {
+                            lift.style.transition = '';
+                            var d = lift.dataset.delay;
+                            lift.style.transitionDelay = d ? d + 's' : '';
+                            lift.classList.add('in-view');
+                        });
+                    });
+                }
             }
 
             function updateParallax() {
@@ -1201,6 +1222,8 @@
                 var p          = Math.min(scrolled / scrollRoom, 1);
 
                 if (p <= 0) { clearParallax(); ticking = false; return; }
+
+                heroNeedsReveal = true;
 
                 var t;
 
