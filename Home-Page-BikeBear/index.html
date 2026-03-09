@@ -129,11 +129,12 @@
         /* --- Main flying bear: z-index 25 = above slider (20) and title (10) --- */
         .hero__bear {
             position: absolute;
+            height: 71.429vh;
             bottom: 0;
-            top:23%;
+            top: 23%;
             left: 50%;
             transform: translateX(-50%) translateY(0);
-            width: 66.67%;
+            /* width: 66.67%; */
             z-index: 25;
         }
 
@@ -155,9 +156,9 @@
             right: 0;
             text-align: center;
             font-family: 'Boldonse', sans-serif;
-            font-size: 5.9vw;
+            font-size: 12.143vh;
             font-weight: 400;
-            line-height: 7.64vw;
+            line-height: 15.714vh;
             text-transform: uppercase;
             color: var(--black);
             z-index: 10;
@@ -171,9 +172,9 @@
             position: absolute;
             top: 60%;
             left: 2.78%;
-            width: 18.75%;
+            width: 38.6vh;
             font-family: 'Inter', sans-serif;
-            font-size: 1.39vw;
+            font-size: 2.857vh;
             font-weight: 700;
             line-height: 100%;
             color: var(--black);
@@ -838,7 +839,7 @@
             /* ── FORM ── */
             .form-section     { padding-top: 16vw; }
             .form-section h2  { font-size: 11vw; line-height: 15.5vw; }
-            .form-section .sub { font-size: 4vw; margin-top: 2.5vw; }
+            .form-section .sub { font-size: 4vw; margin-top: 3vw; width: 75vw; line-height: 1.6; }
 
             .form-box { width: 92vw; padding: 6vw; border-radius: 5vw; margin-top: 7vw; }
 
@@ -916,7 +917,6 @@
         .pricing__btn:hover  { transform: scale(1.05); }
         .pricing__btn:active { transform: scale(0.97); }
 
-        /* CTA uses reveal-scale for entry — redeclare here so hover wins the cascade */
         .hero__cta { transition: transform 0.2s ease, opacity 0.7s ease; }
         .hero__cta:hover  { transform: scale(1.05); }
         .hero__cta:active { transform: scale(0.97); }
@@ -1189,7 +1189,7 @@
                 title.style.transform           = '';  title.style.opacity             = '';
                 subtext.style.transform         = '';  subtext.style.opacity           = '';
                 cta.style.transform             = '';  cta.style.opacity               = '';
-                slider.style.transform          = '';  slider.style.opacity            = '';
+                slider.style.opacity            = '';
                 hero.style.opacity              = '';
                 if (heroNeedsReveal) {
                     heroNeedsReveal = false;
@@ -1227,10 +1227,13 @@
 
                 var t;
 
-                /* ── SLIDER — exits DOWN ── */
+                /* ── SLIDER — fades out ── */
                 t = lp(p, 0.05, 0.22);
-                slider.style.transform = 'translateY(' + (120 * t) + '%)';
-                slider.style.opacity   = String(1 - t);
+                if (t > 0) {
+                    slider.style.opacity = String(1 - t);
+                } else {
+                    slider.style.opacity = '';
+                }
 
                 /* ── LOGO — exits UP-LEFT ── */
                 t = lp(p, 0.08, 0.28);
@@ -1255,11 +1258,9 @@
                 /* ── CTA — exits RIGHT (only write inline when actively exiting) ── */
                 t = lp(p, 0.22, 0.46);
                 if (t > 0) {
-                    cta.style.transform = 'translateX(' + (120 * t) + '%)';
-                    cta.style.opacity   = String(1 - t);
+                    cta.style.opacity = String(1 - t);
                 } else {
-                    cta.style.transform = '';
-                    cta.style.opacity   = '';
+                    cta.style.opacity = '';
                 }
 
                 /* ── CLOUD LEFT — exits LEFT + UP ── */
